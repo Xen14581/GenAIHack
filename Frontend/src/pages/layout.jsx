@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 
 const Layout = (props) => {
   return (
-    <Box sx={{pl: 8, pr: 8}}>
+    <Box sx={{px: '5rem'}}>
       <NavBar>
         {props?.children}
       </NavBar>

@@ -1,40 +1,36 @@
-import * as React from 'react';
+import {useState, useEffect, useRef} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-// import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 
-const drawerWidth = 240;
+import { ReactComponent as Logo } from '../assets/Logo-with-text.svg';
+
 const navItems = [{name: 'Home', route: '/'}, {name: 'Learn', route: '/learn'}];
 
 const Navbar = (props) => {
     const { children } = props;
-    const [mobileOpen, setMobileOpen] = React.useState(false);
 
     const location = window.location.pathname
 
-    console.log(location)
-
     return (
-        <Box sx={{ height: '100vh', overflow: 'hidden' }}>
+        <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
             <CssBaseline />
-            <Box sx={{ height: '8vh' }}>
+            <Box sx={{ height: '5rem' }}>
                 <AppBar component="nav" sx={{display: 'flex', alignItems: 'center', backgroundColor: 'transparent'}} elevation={0} >
-                    <Box sx={{ width: '90%', backgroundColor: '#002A47', borderRadius: '0 0 23px 23px', zIndex: "1100"}}>
+                    <Box sx={{ width: '90%', backgroundColor: '#002A47', borderRadius: '0 0 23px 23px', zIndex: "1100", px: 1}}>
                         <Toolbar sx={{display: 'flex', justifyContent: 'space-between'}}>
                             {/* Left Box - Possible Icon */}
-                            <Box></Box>
+                            <Box sx={{
+                                display: 'flex', 
+                                alignItems: 'center',
+                            }}>
+                                <Logo width="40%" height="40%" />
+                            </Box>
 
                             {/* Right box, contains all tabs and profile icon */}
                             <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center' }}>
@@ -43,6 +39,7 @@ const Navbar = (props) => {
                                     {navItems.map((item,index)=>(
                                         <ListItem
                                             key={index}
+                                            sx={{display: 'flex', flexDirection: 'column'}}
                                         >
                                             <ListItemText 
                                                 sx={{ cursor:"pointer", color: '#fff' }}
@@ -53,6 +50,7 @@ const Navbar = (props) => {
                                                 }}
                                                 primary={item.name} 
                                             />
+                                            <div style={{width: '100%', height: '0.3vh', backgroundColor:"#fff", opacity: item.route===location?'1':'0'}} />
                                         </ListItem>
                                     ))}
                                 </List>
@@ -81,7 +79,10 @@ const Navbar = (props) => {
                 {drawer}
                 </Drawer>
             </nav> */}
-            <Box sx={{ height: { sm: '93vh', lg: '92vh'}, display: 'flex' }}>
+            <Box sx={{ 
+                height: "100%", 
+                display: 'flex' 
+            }}>
                 {children}
             </Box>
         </Box>
