@@ -14,6 +14,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
+import { deepOrange, blue } from '@mui/material/colors';
 
 const drawerWidth = 240;
 const navItems = [{name: 'Home', route: '/'}, {name: 'Learn', route: '/learn'}];
@@ -58,7 +59,7 @@ const Navbar = (props) => {
                                 </List>
 
                                 {/* Profile Icon */}
-                                <Box sx={{p:1}}><Avatar src="/broken-image.jpg" /></Box>                                
+                                <Box sx={{p:1}}><Avatar src="/broken-image.jpg" sx={{ bgcolor: blue[500] }} /></Box>                                
                             </Box>
                         </Toolbar>
                     </Box>

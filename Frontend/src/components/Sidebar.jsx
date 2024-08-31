@@ -18,6 +18,17 @@ const SideBar=()=>{
         "Bubble Sort",
         "Quick Sort",
         "Queues",
+        "Data Structures",
+        "Linear Data Structures",
+        "Non-Linear Data Structures",
+        "Arrays",
+        "Linked List",
+        "Stack",
+        "Queues",
+        "Sorting - Introduction",
+        "Bubble Sort",
+        "Quick Sort",
+        "Queues",
     ];
 
     const handleSelectTopic=(index)=>{
