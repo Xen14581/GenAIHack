@@ -12,6 +12,7 @@
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
     "@mui/material": "latest",
+    "hamburger-react": "^2.5.1",
     "react": "latest",
     "react-dom": "latest",
     "react-router-dom": "^6.26.1",
