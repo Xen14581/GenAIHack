@@ -1,14 +1,11 @@
 import React from "react";
-import { TextField, Button, Box, Paper,Stack } from "@mui/material";
-import Message from "./Message";
-import Loader from "./Loader";
+import { TextField, Button, Box, Stack } from "@mui/material";
+import MessagePanel from "./MessagePanel";
 
-const ChatBox=()=>{
+const ChatBox=({ chatHistory })=>{
     return(
-        <Box sx={{display: 'flex', flexDirection: 'column', width: '100%', pl: 2, pr: 2 }}>
-            <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', height: '100%', flexDirection: 'column'}} >
-                <Message role={'assistant'} message={"Hello World"} />
-            </Box>
+        <Box sx={{display: 'flex', flexDirection: 'column', width: '100%', height: '100%', px: 2 }}>
+            <MessagePanel chatHistory={chatHistory} />
             <Box sx={{marginTop:"auto",marginBottom:"5vh",width:'100%'}}>
                 <Stack spacing={2} direction="row">
                     <TextField label="Message SAGE.AI" sx={{width:"85%"}}/>

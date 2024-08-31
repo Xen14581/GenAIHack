@@ -11,7 +11,7 @@ const router = createBrowserRouter([
         element: <Chat />,
     },
     {
-        path: "/code",
+        path: "/learn/code",
         element: <Code />,
     }
 ]);

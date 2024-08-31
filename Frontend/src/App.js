@@ -3,12 +3,11 @@ import router from "./routes"
 import {
   RouterProvider,
 } from "react-router-dom";
-import Layout from './pages/layout';
 
 export default function App() {
   return (
-    <Layout>
+    // <Layout>
       <RouterProvider router={router} />
-    </Layout>
+    // </Layout>
   );
 }

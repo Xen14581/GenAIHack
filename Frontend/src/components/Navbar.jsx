@@ -7,6 +7,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 import Avatar from '@mui/material/Avatar';
+import { blue } from '@mui/material/colors';
 
 import { ReactComponent as Logo } from '../assets/Logo-with-text.svg';
 
@@ -16,6 +17,16 @@ const Navbar = (props) => {
     const { children } = props;
 
     const location = window.location.pathname
+
+    const matchLocation = (location, route) => {
+        if (location.length == route.length && location == route) {
+            return true;
+        } else if (route !== "/" && location.startsWith(route)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     return (
         <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -45,18 +56,24 @@ const Navbar = (props) => {
                                                 sx={{ cursor:"pointer", color: '#fff' }}
                                                 // onClick={()=>handleSelectTopic(index)}
                                                 primaryTypographyProps = {{
-                                                    color:item.route===location?"#fff":"#478BF2",
+                                                    color:matchLocation(location, item.route)?"#fff": blue[500],
                                                     fontWeight:"700",
                                                 }}
                                                 primary={item.name} 
                                             />
-                                            <div style={{width: '100%', height: '0.3vh', backgroundColor:"#fff", opacity: item.route===location?'1':'0'}} />
+                                            {/* Underline */}
+                                            <div style={{
+                                                width: '100%', 
+                                                height: '0.3vh', 
+                                                backgroundColor:"#fff", 
+                                                opacity: matchLocation(location, item.route)?'1':'0'
+                                            }} />
                                         </ListItem>
                                     ))}
                                 </List>
 
                                 {/* Profile Icon */}
-                                <Box sx={{p:1}}><Avatar src="/broken-image.jpg" /></Box>                                
+                                <Box sx={{p:1}}><Avatar src="/broken-image.jpg" sx={{ bgcolor: blue[500] }} /></Box>                                
                             </Box>
                         </Toolbar>
                     </Box>
