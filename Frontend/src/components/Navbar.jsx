@@ -9,8 +9,14 @@ import Avatar from '@mui/material/Avatar';
 import { blue } from '@mui/material/colors';
 import { Grid2 } from '@mui/material';
 import { ReactComponent as Logo } from '../assets/logos/Logo-with-text.svg';
-import Hamburger from 'hamburger-react';
-import { useState } from 'react';
+
+// For menu
+import { styled, alpha } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import MenuIcon from '@mui/icons-material/Menu';
+import { BorderColor } from '@mui/icons-material';
 
 
 const Navbar = (props) => {
@@ -18,8 +24,72 @@ const Navbar = (props) => {
 
     const location = window.location.pathname
     const navItems = [{name: 'Home', route: '/'}, {name: 'Learn', route: '/learn'}, {name: 'Report Card', route: '/report-card'}, {name: 'Why Sage?', route:'/why-sage'}];
-    const [isMenuOpen, setMenuOpen] = useState(false)
-    console.log(location)
+
+    // Menu style
+    const StyledMenu = styled((props) => (
+        <Menu
+          elevation={5}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          {...props}
+        />
+      ))(({ theme }) => ({
+        '& .MuiPaper-root': {
+          borderRadius: 6,
+          marginTop: theme.spacing(1),
+          minWidth: 200,
+          backgroundColor: "#002A47",
+          border: "2px solid #ffffff",
+          color: '#ffffff',
+          boxShadow:
+            'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+          '& .MuiMenu-list': {
+            padding: '4px 0',
+          },
+          '& .MuiMenuItem-root': {
+            '& .MuiSvgIcon-root': {
+              fontSize: 18,
+              color: theme.palette.text.secondary,
+              marginRight: theme.spacing(1.5),
+            },
+            '&:active': {
+            //   backgroundColor: alpha(
+            //     theme.palette.primary.main,
+            //     theme.palette.action.selectedOpacity,
+                
+            //   ),
+            },
+          },
+          ...theme.applyStyles('dark', {
+            color: theme.palette.grey[300],
+          }),
+        },
+      }));
+
+    //   Menu Controller
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleOpenClose = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+
+    // Use this function to route
+    const handleRoute = (e) => {
+      if (e.target.id == ""){
+        setAnchorEl(null);
+      } else {
+        var route = e.target.id
+        console.log(route)
+        setAnchorEl(null);
+      }
+      
+    };
 
     return (
         <Box sx={{ height: '100vh', overflow: 'hidden' }}>
@@ -34,7 +104,7 @@ const Navbar = (props) => {
                         </Grid2>
                         {/* List or Menu */}
                         <Grid2 item sx={window.innerWidth > 1000 ? {height: '100%',minWidth: '55%', maxWidth: '55%', padding: 0} : 
-                                        {height: '100%',minWidth: '35%', maxWidth: '35%', padding: 0, display: 'flex', justifyContent: 'flex-end'}} >
+                                        {height: '100%',minWidth: '35%', maxWidth: '35%', padding: 0, display: 'flex', justifyContent: 'flex-end', }} >
                             {/* Show smaller hamburger for small screens and a list for large screen */}
                             {window.innerWidth > 1000 ? 
                             <List sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0}}>
@@ -55,42 +125,32 @@ const Navbar = (props) => {
                                         />
                                     </ListItem>
                                 ))}
-                            </List> :      
-                            <div>
-                                <IconButton
-                                    aria-label="more"
-                                    id="long-button"
-                                    aria-controls={open ? 'long-menu' : undefined}
-                                    aria-expanded={open ? 'true' : undefined}
-                                    aria-haspopup="true"
-                                    onClick={handleClick}
-                                >
-                                    <MoreVertIcon />
-                                </IconButton>
-                                <Menu
-                                    id="long-menu"
-                                    MenuListProps={{
-                                    'aria-labelledby': 'long-button',
-                                    }}
-                                    anchorEl={anchorEl}
-                                    open={open}
-                                    onClose={handleClose}
-                                    slotProps={{
-                                    paper: {
-                                        style: {
-                                        maxHeight: ITEM_HEIGHT * 4.5,
-                                        width: '20ch',
-                                        },
-                                    },
-                                    }}
-                                >
-                                    {options.map((option) => (
-                                    <MenuItem key={option} selected={option === 'Pyxis'} onClick={handleClose}>
-                                        {option}
-                                    </MenuItem>
-                                    ))}
-                                </Menu>
-                                </div>
+                            </List> :    <>
+                            <Button
+                                id="demo-customized-button"
+                                aria-controls={open ? 'demo-customized-menu' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? 'true' : undefined}
+                                variant="text"
+                                disableElevation
+                                onClick={handleOpenClose}
+                                sx={{ color: "#ffffff"}}
+                            >
+                                {window.innerWidth > 500 ? "Options" : <MenuIcon sx = {{fontSize: "40px"}}/>}
+                            </Button>
+                            <StyledMenu
+                                id="demo-customized-menu"
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleRoute}
+                            >
+                                {navItems.map((item, index) => {
+                                    return (<MenuItem key={index} id={item.name} onClick={handleRoute} disableRipple>
+                                    {item.name}
+                                    </MenuItem>)
+                                })}
+                            </StyledMenu>
+                            </>                                     
 }
                         </Grid2>
                         {/* Avatar */}

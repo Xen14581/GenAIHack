@@ -66,8 +66,8 @@ const SideBar=()=>{
                                     sx={{ cursor:"pointer" }}
                                     onClick={()=>handleSelectTopic(topic)}
                                     primaryTypographyProps = {{
-                                        color:selectedTopic===index?"#002A47":"#000000",
-                                        fontWeight:selectedTopic===index?"800":"400",
+                                        color:selectedTopic===topic?"#002A47":"#000000",
+                                        fontWeight:selectedTopic===topic?"800":"400",
                                         
                                     }}
                                     primary={topic} 
@@ -86,17 +86,17 @@ const SideBar=()=>{
                  }} 
          
              >
-                <FormControl sx={{ m: 1, mt: 3, width: '90%' }}>
+                <FormControl variant="standard" sx={{ m: 1, mt: 3, width: '90%' }}>
                 <Select
                 displayEmpty
+                variant="standard"
                 value={selectedTopic}
                 onChange={(event)=>handleSelectTopic(event.target.value)}
                 input={<OutlinedInput />}
-                // MenuProps={{PaperProps: {style: {maxHeight: 48 * 4.5 + 8, width: 250}}}}
                 inputProps={{ 'aria-label': 'Without label' }}
                 >
                 <MenuItem disabled value="">
-                    <em>Placeholder</em>
+                    <em>Select a Topic</em>
                 </MenuItem>
                 {topics.map((topic, index) => (
                     <MenuItem
