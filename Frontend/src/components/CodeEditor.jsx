@@ -15,7 +15,6 @@ const CodeEditor = ({ codeTemplate }) => {
     const monacoRef = useRef(null)
 
     function handleEditorDidMount(editor, monaco) {
-        console.log(editor)
         editor.onMouseDown(() => {checkPosition()})
         editor.onKeyUp(() => {checkPosition()})
         monacoRef.current = editor; 
@@ -41,8 +40,8 @@ const CodeEditor = ({ codeTemplate }) => {
     }
 
     return (
-        <Stack sx={{height:'100%', width: '100%', border:1, borderWidth: '1px', borderRadius: '12px'}}>
-            <Box sx={{height: '8%', width: '100%', px:2, backgroundColor: '#eee', borderRadius: '12px 12px 0 0'}}>
+        <Stack sx={{height:'100%', width: '100%', border:1, borderWidth: '1px', borderRadius: '12px', borderColor: '#aaa'}}>
+            <Box sx={{height: '8%', width: '100%', px:2, backgroundColor: '#ddd', borderRadius: '12px 12px 0 0'}}>
                 <Box sx={{height: '100%', width: '100%', display: 'flex', justifyContent: 'space-between'}}>
                     <Typography sx={{display: 'flex', alignItems: 'center'}}>
                         Code
@@ -74,7 +73,7 @@ const CodeEditor = ({ codeTemplate }) => {
                 theme={'vs-light'}
                 onMount={handleEditorDidMount}
             />
-            <Typography component="span" sx={{display: 'flex', justifyContent: 'flex-end', px: 2, backgroundColor: '#eee', borderRadius: '0 0 12px 12px'}}>
+            <Typography component="span" sx={{display: 'flex', justifyContent: 'flex-end', px: 2, backgroundColor: '#ddd', borderRadius: '0 0 12px 12px'}}>
                 {`Line: ${state.cursorPosition[0]}, Column: ${state.cursorPosition[1]}`}
             </Typography>
         </Stack>

@@ -3,6 +3,7 @@ import router from "./routes"
 import {
   RouterProvider,
 } from "react-router-dom";
+import './styles.css'
 
 export default function App() {
   return (

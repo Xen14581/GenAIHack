@@ -12,10 +12,11 @@
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
     "@monaco-editor/react": "^4.6.0",
+    "@mui/icons-material": "^6.0.1",
     "@mui/material": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "react-resizable": "^3.0.5",
+    "react-markdown": "^9.0.1",
     "react-router-dom": "^6.26.1",
     "react-scripts": "latest"
   },

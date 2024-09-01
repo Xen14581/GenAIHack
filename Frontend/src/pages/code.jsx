@@ -1,10 +1,9 @@
-import { Grid2 as Grid, Box } from '@mui/material';
+import { Grid2 as Grid, Box, Stack } from '@mui/material';
 import { useState, useLayoutEffect } from 'react';
 import ProblemPanel from '../components/ProblemPanel';
 import ChatBox from '../components/ChatBox';
 import CodeEditor from '../components/CodeEditor';
 import TestPanel from '../components/TestPanel';
-import { Resizable } from 'react-resizable';
 
 const Code = () => {
 
@@ -27,7 +26,23 @@ const Code = () => {
                 {
                     "input": [0],
                     "expected_output": "0"
-                }
+                },
+                {
+                    "input": [5],
+                    "expected_output": "25"
+                },
+                {
+                    "input": [0],
+                    "expected_output": "0"
+                },
+                {
+                    "input": [5],
+                    "expected_output": "25"
+                },
+                {
+                    "input": [0],
+                    "expected_output": "0"
+                },
             ]
         }
         setProblem(prev => {
@@ -42,21 +57,21 @@ const Code = () => {
     }, [setProblem])
 
     return (
-        <Grid container spacing={1} sx={{width: '100%', pb: "1rem"}}>
-            <Grid size={3} sx={{ borderRight: 1, borderColor: '#000', borderWidth: '1px' }}>
+        <Grid container spacing={1} sx={{width: '100%', py: "0.5rem"}}>
+            <Grid size={3} sx={{ border: 1, borderColor: '#aaa', borderWidth: '1px', borderRadius: '12px' }}>
                 <ProblemPanel problemStatement={problem.problemStatement} />
             </Grid>
-            <Grid size={6} sx={{}}>
-                <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
+            <Grid size={6}>
+                <Stack style={{ height: '100%'}} spacing={1}>
                     <Box sx={{ height: '60%', width: '100%'}}>
                         <CodeEditor codeTemplate={problem.codeTemplate} />
                     </Box>
-                    <Box sx={{ height: '40%'}}>
+                    <Box sx={{ height: '40%', width: '100%'}}>
                         <TestPanel testCases={problem.testCases} />
                     </Box>
-                </div>
+                </Stack>
             </Grid>
-            <Grid size={3} sx={{ borderLeft: 1, borderColor: '#000', borderWidth: '1px' }}>
+            <Grid size={3} sx={{ border: 1, borderColor: '#aaa', borderWidth: '1px', borderRadius: '12px' }}>
                 <ChatBox chatHistory={problem.chatHistory} />
             </Grid>
         </Grid>

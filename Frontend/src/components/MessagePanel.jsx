@@ -9,8 +9,8 @@ const MessagePanel = ({ chatHistory }) => {
             justifyContent: 'flex-end', 
             height: '100%', 
             flexDirection: 'column', 
-            overflow: "auto", 
-            py: 3, 
+            overflow: "hidden", 
+            py: 2,
             position: 'relative',
             }} 
         >
@@ -29,9 +29,11 @@ const MessagePanel = ({ chatHistory }) => {
                 <InvertedLogo width="30%" height="30%" opacity="0.045" />
             </Box>
             {/* Chats */}
-            {chatHistory.map((message, index) => {
-                return <Message key={index} role={message.role} message={message.content} /> 
-            })}
+            <Box sx={{width: '100%', height: '100%', overflowY: 'auto'}}>
+                {chatHistory.map((message, index) => {
+                    return <Message key={index} role={message.role} message={message.content} /> 
+                })}
+            </Box>
         </Box>
     )
 }

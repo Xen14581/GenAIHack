@@ -10,7 +10,7 @@ const Message = ({role, message}) =>{
             display: 'flex', 
             flexWrap: "wrap",
             justifyContent: role === 'assistant' ? 'start' : 'end',
-            pt: 1,
+            px: 3,
             }}
         >
             <Box sx={{

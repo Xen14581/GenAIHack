@@ -31,6 +31,20 @@ const ChatBox=()=>{
         const response = [
             {'role': 'user', 'content': 'Hello'},
             {'role': 'assistant', 'content': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
+            {'role': 'user', 'content': 'Hello'},
+            {'role': 'assistant', 'content': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
+            {'role': 'user', 'content': 'Hello'},
+            {'role': 'assistant', 'content': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
+            {'role': 'user', 'content': 'Hello'},
+            {'role': 'assistant', 'content': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
+            {'role': 'user', 'content': 'Hello'},
+            {'role': 'assistant', 'content': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
+            {'role': 'user', 'content': 'Hello'},
+            {'role': 'assistant', 'content': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
+            {'role': 'user', 'content': 'Hello'},
+            {'role': 'assistant', 'content': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
+            {'role': 'user', 'content': 'Hello'},
+            {'role': 'assistant', 'content': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
         ]
         setState(prev => {
             return {
@@ -43,7 +57,7 @@ const ChatBox=()=>{
     
 
     return(
-        <Box sx={{display: 'flex', flexDirection: 'column', width: '100%', height: '100%', p: 3 }}>
+        <Box sx={{display: 'flex', flexDirection: 'column', width: '100%', height: '100%', px: 4, py: 1, maxHeight: '90vh' }}>
             <MessagePanel chatHistory={state.history} />
             <Box sx={{width:'100%'}}>
                 <Stack spacing={2} direction="row">
