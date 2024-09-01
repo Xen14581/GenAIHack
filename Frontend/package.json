@@ -11,9 +11,13 @@
   "dependencies": {
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
+    "@monaco-editor/react": "^4.6.0",
     "@mui/material": "latest",
+    "install": "^0.13.0",
+    "npm": "^10.8.3",
     "react": "latest",
     "react-dom": "latest",
+    "react-markdown": "^9.0.1",
     "react-router-dom": "^6.26.1",
     "react-scripts": "latest"
   },
