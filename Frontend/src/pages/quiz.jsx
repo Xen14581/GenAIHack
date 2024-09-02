@@ -85,7 +85,7 @@ const Quiz=()=>{
           <Grid2 container id="Quiz-Sidebar-Container" item size={{xs: 12, md:3}} sx={window.innerWidth < 1000 ? {display: 'flex', justifyContent: 'center', overflowX: 'hidden', overflowY: 'hidden'} : {overflowX: 'hidden', overflowY: 'hidden', padding: 0}}>
             <SideBar />
           </Grid2>
-          <Grid2 container id="Quiz-Content-Container" item size = {{xs: 12, md:  9}} alignContent={topicDetails?.quiz ? "flex-start" : "flex-start"} sx={window.innerWidth < 1000 ? {height: 'max-content', maxHeight: "92vh", overflowY: 'hidden', overflowX: 'hidden'} : {height: "100%", maxHeight: "92vh", overflowY: 'hidden', overflowX: 'hidden'}} spacing={window.innerWidth > 1000? 0 : 2}>
+          <Grid2 container id="Quiz-Content-Container" item size = {{xs: 12, md:  9}} alignContent={topicDetails?.quiz ? "flex-start" : "flex-start"} sx={window.innerWidth < 1000 ? {height: 'max-content', maxHeight: "92vh", overflowY: 'hidden', overflowX: 'hidden'} : {height: "100%", maxHeight: "92vh", overflowY: 'hidden', overflowX: 'hidden'}} spacing={window.innerWidth > 1000 ? 0 : 2}>
             {topicDetails?.quiz ?
             <>
               <Grid2 item size={{xs: 12}}  sx={window.innerWidth > 1000 ? {height: 'max-content', maxHeight: "10vh", scrollY: 'hidden'}: {height: "max-content", maxHeight: "10vh", padding: '5px'}}>
