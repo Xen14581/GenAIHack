@@ -4,6 +4,7 @@ import {
 import Example from "../pages/demo";
 import Chat from "../pages/chat"
 import Code from "../pages/code";
+import Quiz from "../pages/quiz"
 
 const router = createBrowserRouter([
     {
@@ -13,7 +14,11 @@ const router = createBrowserRouter([
     {
         path: "/learn/code",
         element: <Code />,
-    }
+    },
+    {
+        path: "/learn/quiz/",
+        element: <Quiz />,
+    },
 ]);
 
 export default router

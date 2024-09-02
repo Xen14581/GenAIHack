@@ -38,6 +38,7 @@ const SideBar=()=>{
 
     const [selectedTopic,setSelectedTopic]=useState("");
     const handleSelectTopic=(index)=>{
+        console.log(index)
         setSelectedTopic(index);
     }
 
