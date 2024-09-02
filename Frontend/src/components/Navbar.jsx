@@ -16,7 +16,7 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
-import { BorderColor } from '@mui/icons-material';
+import Divider from '@mui/material/Divider';
 
 
 const Navbar = (props) => {
@@ -146,8 +146,16 @@ const Navbar = (props) => {
                             >
                                 {navItems.map((item, index) => {
                                     return (<MenuItem key={index} id={item.name} onClick={handleRoute} disableRipple>
-                                    {item.name}
-                                    </MenuItem>)
+                                    <Grid2 container sx={{width: "max-content", maxWidth: "200px"}}>
+                                      <Grid2 item size={{xs : 12}}>
+                                        {item?.name}
+                                      </Grid2>
+                                      <Grid2 item size={{xs : 12}}>
+                                        <Divider sx={{border: "1px solid #fff"}}/>
+                                      </Grid2>
+                                    </Grid2>
+                                    </MenuItem>
+                                    )
                                 })}
                             </StyledMenu>
                             </>                                     
