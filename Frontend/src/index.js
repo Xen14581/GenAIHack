@@ -5,17 +5,21 @@ import { ThemeProvider } from '@mui/material/styles';
 import App from './App';
 import theme from './theme';
 import Layout from './pages/layout';
+import store from './reducers/store'
+import { Provider } from 'react-redux'
 
 const rootElement = document.getElementById('root');
 const root = ReactDOM.createRoot(rootElement);
 
 root.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <Layout>
-        <CssBaseline />
-        <App />
-      </Layout>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <Layout>
+          <CssBaseline />
+          <App />
+        </Layout>
+      </ThemeProvider>
+    </Provider>
   </React.StrictMode>,
 );

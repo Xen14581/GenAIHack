@@ -3,7 +3,6 @@ import { blue } from "@mui/material/colors";
 import { useState } from "react";
 
 const TestPanel = ({testCases}) => {
-    console.log(testCases)
     const [state, setState] = useState({
         selected: 0,
         hover: ''
@@ -22,7 +21,7 @@ const TestPanel = ({testCases}) => {
             
             {/* Test Case Buttons */}
             <Stack spacing={1} direction="row" sx={{px:2}}>
-                {testCases.map((test, index) => {
+                {testCases?.map((test, index) => {
                     return (
                         <Button 
                             variant="extended" 
@@ -42,13 +41,13 @@ const TestPanel = ({testCases}) => {
                     Input
                 </Typography>
                 <Typography sx={{backgroundColor: '#ddd', borderRadius: '5px', px: 2, py: 1}}>
-                    {testCases[state.selected]?.input}
+                    {testCases?.[state.selected]?.input}
                 </Typography>
                 <Typography>
                     Expected Output
                 </Typography>
                 <Typography sx={{backgroundColor: '#ddd', borderRadius: '5px', px: 2, py: 1}}>
-                    {testCases[state.selected]?.expected_output}
+                    {testCases?.[state.selected]?.expected_output}
                 </Typography>
             </Stack>
         </Stack>

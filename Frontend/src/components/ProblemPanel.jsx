@@ -8,7 +8,7 @@ import {
   const ProblemPanel = ({ problemStatement }) => {
     return (
       <Stack spacing={1} direction="column" padding={2}>
-        <Select fullWidth />
+        {/* <Select fullWidth /> */}
         <Typography variant="h5" sx={{ color: "#006CB8" }}>
           Description :
         </Typography>

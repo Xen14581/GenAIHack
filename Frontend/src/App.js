@@ -6,9 +6,5 @@ import {
 import './styles.css'
 
 export default function App() {
-  return (
-    // <Layout>
-      <RouterProvider router={router} />
-    // </Layout>
-  );
+  return (<RouterProvider router={router} />);
 }
