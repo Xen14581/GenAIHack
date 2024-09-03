@@ -1,23 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 export const userDataSlice = createSlice({
-  name: 'userData',
+  name: 'user',
   initialState: {
     value: localStorage.getItem("user")
   },
   reducers: {
-    login: (state, action) => {
+    storeUserData: (state, action) => {
       state.value = action.payload
       localStorage.setItem("user", action.payload)
+      console.log("data stored: " + String(action))
+      return 
     },
-    logout: state => {
+    removeUserData: state => {
       state.value = {}
       localStorage.removeItem("user")
-    },
+      return
+    }
   }
 })
 
 // Action creators are generated for each case reducer function
-export const { login, logout } = userDataSlice.actions
+export const { storeUserData, removeUserData } = userDataSlice.actions
 
 export default userDataSlice.reducer

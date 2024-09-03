@@ -1,7 +1,5 @@
 import React from "react";
-import { useState,useEffect } from "react";
 import {Box,Typography} from  "@mui/material";
-import Loader from "./Loader";
 
 const Message = ({role, message}) =>{
     return(

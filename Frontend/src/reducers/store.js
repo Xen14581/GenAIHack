@@ -4,7 +4,7 @@ import topicReducer from "./topicSlice"
 
 export default configureStore({
   reducer: {
-    userData: userDataReducer,
+    user: userDataReducer,
     topic: topicReducer,
   }
 })
