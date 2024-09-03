@@ -8,11 +8,12 @@ import Quiz from "../pages/quiz"
 import LearnLayout from "../pages/learnLayout";
 import SignUp from "../pages/signup";
 import AuthLayout from "../pages/authLayout";
+import HomePage from "../pages/home";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <>Homepage</>,
+        element: <HomePage />,
     },
     {
         path: "/auth",

@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Typography, Stack, Button } from "@mui/material";
+import { Typography, Stack, Button } from "@mui/material";
 import Infographic from "../assets/Infographic.png";
 import DSACard from "../components/Card";
 
@@ -11,7 +11,7 @@ const HomePage = () => {
       sx={{
         height: "100%",
         width: "100%",
-        paddingTop: "20vh",
+        paddingTop: "7vh",
       }}
     >
       <Stack

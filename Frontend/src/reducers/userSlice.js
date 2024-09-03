@@ -9,7 +9,6 @@ export const userDataSlice = createSlice({
     storeUserData: (state, action) => {
       state.value = action.payload
       localStorage.setItem("user", action.payload)
-      console.log("data stored: " + String(action))
       return 
     },
     removeUserData: state => {

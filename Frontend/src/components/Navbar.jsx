@@ -5,9 +5,13 @@ import CssBaseline from '@mui/material/CssBaseline';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import Avatar from '@mui/material/Avatar';
 import { blue } from '@mui/material/colors';
 import { Grid2 } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import Logout from '@mui/icons-material/Logout';
+import Divider from '@mui/material/Divider';
 import { ReactComponent as Logo } from '../assets/Logo-with-text.svg';
 
 // For menu
@@ -18,15 +22,17 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import { BorderColor } from '@mui/icons-material';
 
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { removeUserData } from '../reducers/userSlice';
 
 const Navbar = (props) => {
     const { children } = props;
 
     let user = useSelector(state => state.user.value)
+    const dispatch = useDispatch()
 
     const [state, setState] = React.useState({
-        redirect: true
+        redirect: false
     })
 
     const location = window.location.pathname
@@ -43,10 +49,12 @@ const Navbar = (props) => {
     }
 
     React.useLayoutEffect(() => {
-        if (user || location === "/") {
-            setState(prev => { return {...prev, redirect: false} })
+        if (user || location.startsWith("/auth")) {
+            setState(prev => { return {...prev, redirect: true} })
         }
     }, [user, window.location])
+
+    console.log(user, location, state)
 
     // Menu style
     const StyledMenu = styled((props) => (
@@ -114,10 +122,25 @@ const Navbar = (props) => {
       
     };
 
+    const [avatarEl, setAvatarEl] = React.useState(null);
+    const avatarMenuOpen = Boolean(avatarEl);
+
+    const handleClick = (event) => {
+        setAvatarEl(event.currentTarget);
+    };
+
+    const handleClose = (e) => {
+        if(e.target.id === "logout") {
+            dispatch(removeUserData())
+            window.location.href = "/"
+        }
+        setAvatarEl(null);
+    };
+
     return (
         <Box 
             sx={{ 
-                height: '100vh', overflow: 'hidden' 
+                height: '100vh', overflow: location === "/" ? 'auto' : 'hidden' , px: window.innerWidth > 1000 ? '5rem' : 0
             }}
         >
             <CssBaseline />
@@ -246,8 +269,9 @@ const Navbar = (props) => {
                                         })}
                                     </StyledMenu>
                                 </>                                     
-    }
+                                }
                             </Grid2>
+
                             {/* Avatar */}
                             <Grid2 
                                 size={window.innerWidth > 1000 ? 2 : 3}
@@ -262,7 +286,64 @@ const Navbar = (props) => {
                                     }
                                 } 
                             >
-                                <Avatar src="/broken-image.jpg" sx={window.innerWidth > 1000 ? { bgcolor: blue[600] , width: 35, height: 35} : { bgcolor: blue[600] , width: 30, height: 30}}/>
+                                <IconButton
+                                    onClick={handleClick}
+                                    size="small"
+                                    // sx={{ ml: 2 }}
+                                    aria-controls={avatarMenuOpen ? 'account-menu' : undefined}
+                                    aria-haspopup="true"
+                                    aria-expanded={avatarMenuOpen ? 'true' : undefined}
+                                >
+                                    <Avatar src="/broken-image.jpg" sx={window.innerWidth > 1000 ? { bgcolor: blue[600] , width: 35, height: 35} : { bgcolor: blue[600] , width: 30, height: 30}}/>
+                                </IconButton>
+                                <Menu
+                                    anchorEl={avatarEl}
+                                    id="account-menu"
+                                    open={avatarMenuOpen}
+                                    onClose={handleClose}
+                                    onClick={handleClose}
+                                    slotProps={{
+                                    paper: {
+                                        elevation: 0,
+                                        sx: {
+                                        overflow: 'visible',
+                                        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                                        mt: 1.5,
+                                        '& .MuiAvatar-root': {
+                                            width: 32,
+                                            height: 32,
+                                            ml: -0.5,
+                                            mr: 1,
+                                        },
+                                        '&::before': {
+                                            content: '""',
+                                            display: 'block',
+                                            position: 'absolute',
+                                            top: 0,
+                                            right: 14,
+                                            width: 10,
+                                            height: 10,
+                                            bgcolor: 'background.paper',
+                                            transform: 'translateY(-50%) rotate(45deg)',
+                                            zIndex: 0,
+                                        },
+                                        },
+                                    },
+                                    }}
+                                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                                >
+                                    <MenuItem id="profile" onClick={handleClose}>
+                                        <Avatar /> Profile
+                                    </MenuItem>
+                                    <Divider />
+                                    <MenuItem id="logout" onClick={handleClose}>
+                                        <ListItemIcon>
+                                            <Logout fontSize="small" />
+                                        </ListItemIcon>
+                                        Logout
+                                    </MenuItem>
+                                </Menu>
                             </Grid2>
                         </Grid2>
                     </AppBar>
