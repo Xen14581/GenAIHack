@@ -25,6 +25,53 @@ import { BorderColor } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux'
 import { removeUserData } from '../reducers/userSlice';
 
+// Menu style
+const StyledMenu = styled((props) => (
+    <Menu
+      elevation={5}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      {...props}
+    />
+  ))(({ theme }) => ({
+    '& .MuiPaper-root': {
+      borderRadius: 6,
+      marginTop: theme.spacing(1),
+      minWidth: 200,
+      backgroundColor: "#002A47",
+      border: "2px solid #ffffff",
+      color: '#ffffff',
+      boxShadow:
+        'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+      '& .MuiMenu-list': {
+        padding: '4px 0',
+      },
+      '& .MuiMenuItem-root': {
+        '& .MuiSvgIcon-root': {
+          fontSize: 18,
+          color: theme.palette.text.secondary,
+          marginRight: theme.spacing(1.5),
+        },
+        '&:active': {
+        //   backgroundColor: alpha(
+        //     theme.palette.primary.main,
+        //     theme.palette.action.selectedOpacity,
+            
+        //   ),
+        },
+      },
+      ...theme.applyStyles('dark', {
+        color: theme.palette.grey[300],
+      }),
+    },
+  }));
+
 const Navbar = (props) => {
     const { children } = props;
 
@@ -32,95 +79,24 @@ const Navbar = (props) => {
     const dispatch = useDispatch()
 
     const [state, setState] = React.useState({
-        redirect: false
+        redirect: false,
+        page: ""
     })
 
     const location = window.location.pathname
-    const navItems = [{name: 'Home', route: '/'}, {name: 'Learn', route: '/learn'}, {name: 'Report Card', route: '/report-card'}, {name: 'Why Sage?', route:'/why-sage'}];
+    const navItems = [{name: 'Home', route: '/'}, {name: 'Learn', route: '/learn/chat'}, {name: 'Report Card', route: '/report-card'}, {name: 'Why Sage?', route:'/why-sage'}];
 
     const matchLocation = (location, route) => {
-        if (location.length == route.length && location == route) {
+        let locSlice = "/" + location.split("/")[1]
+        let routeSlice = "/" + route.split("/")[1]
+        if (locSlice.length == routeSlice.length && locSlice == routeSlice) {
             return true;
-        } else if (route !== "/" && location.startsWith(route)) {
+        } else if (routeSlice !== "/" && locSlice.startsWith(routeSlice)) {
             return true;
         } else {
             return false;
         }
     }
-
-    React.useLayoutEffect(() => {
-        if (user || location.startsWith("/auth")) {
-            setState(prev => { return {...prev, redirect: true} })
-        }
-    }, [user, window.location])
-
-    console.log(user, location, state)
-
-    // Menu style
-    const StyledMenu = styled((props) => (
-        <Menu
-          elevation={5}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          {...props}
-        />
-      ))(({ theme }) => ({
-        '& .MuiPaper-root': {
-          borderRadius: 6,
-          marginTop: theme.spacing(1),
-          minWidth: 200,
-          backgroundColor: "#002A47",
-          border: "2px solid #ffffff",
-          color: '#ffffff',
-          boxShadow:
-            'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
-          '& .MuiMenu-list': {
-            padding: '4px 0',
-          },
-          '& .MuiMenuItem-root': {
-            '& .MuiSvgIcon-root': {
-              fontSize: 18,
-              color: theme.palette.text.secondary,
-              marginRight: theme.spacing(1.5),
-            },
-            '&:active': {
-            //   backgroundColor: alpha(
-            //     theme.palette.primary.main,
-            //     theme.palette.action.selectedOpacity,
-                
-            //   ),
-            },
-          },
-          ...theme.applyStyles('dark', {
-            color: theme.palette.grey[300],
-          }),
-        },
-      }));
-
-    //   Menu Controller
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const handleOpenClose = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
-
-    // Use this function to route
-    const handleRoute = (e) => {
-      if (e.target.id == ""){
-        setAnchorEl(null);
-      } else {
-        var route = e.target.id
-        console.log(route)
-        setAnchorEl(null);
-      }
-      
-    };
 
     const [avatarEl, setAvatarEl] = React.useState(null);
     const avatarMenuOpen = Boolean(avatarEl);
@@ -136,6 +112,18 @@ const Navbar = (props) => {
         }
         setAvatarEl(null);
     };
+
+    React.useLayoutEffect(() => {
+        if (user || location.startsWith("/auth")) {
+            setState(prev => { return {...prev, redirect: true} })
+        }
+    }, [user, window.location])
+
+    React.useEffect(() => {
+        if(state.page !== "") {
+            window.location.href = state.page
+        }
+    }, [state.page])
 
     return (
         <Box 
@@ -220,7 +208,7 @@ const Navbar = (props) => {
                                             <ListItem
                                                 key={index}
                                                 sx={{display: 'flex', flexDirection: 'column', maxWidth: 'fit-content'}}
-                                                onClick={() => {window.location.href = "/auth/signIn"}}
+                                                onClick={() => {setState(prev => {return {...prev, page: item.route}})}}
                                             >
                                                 <ListItemText 
                                                     sx={{ cursor:"pointer", color: '#fff', textAlign:'center' }}
@@ -263,7 +251,7 @@ const Navbar = (props) => {
                                         onClose={handleRoute}
                                     >
                                         {navItems.map((item, index) => {
-                                            return (<MenuItem key={index} id={item.name} onClick={handleRoute} disableRipple>
+                                            return (<MenuItem key={index} id={item.name} onClick={() => {setState(prev => {return {...prev, page: item.route}})}} disableRipple>
                                             {item.name}
                                             </MenuItem>)
                                         })}

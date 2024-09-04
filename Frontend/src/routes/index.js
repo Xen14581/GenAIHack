@@ -44,7 +44,7 @@ const router = createBrowserRouter([
         element: <Code />,
     },
     {
-        path: "/report",
+        path: "/report-card",
         element: <>Report Card</>
     }
 ]);
