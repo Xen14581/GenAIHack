@@ -1,12 +1,11 @@
-import NavBar from "../components/Navbar"
-import { Box } from "@mui/material";
+import Navbar from "../components/Navbar";
 
 const Layout = (props) => {
   return (
     // <Box sx={{mx: window.innerWidth > 1000 ? '5rem' : 0, overflowY: 'auto'}}>
-      <NavBar>
+      <Navbar>
         {props?.children}
-      </NavBar>
+      </Navbar>
     // </Box>
   )
 };

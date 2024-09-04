@@ -105,6 +105,13 @@ const Navbar = (props) => {
         setAvatarEl(event.currentTarget);
     };
 
+    //   Menu Controller
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleOpenClose = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+
     const handleClose = (e) => {
         if(e.target.id === "logout") {
             dispatch(removeUserData())
@@ -248,7 +255,7 @@ const Navbar = (props) => {
                                         id="demo-customized-menu"
                                         anchorEl={anchorEl}
                                         open={open}
-                                        onClose={handleRoute}
+                                        onClose={() => {setState(prev => {return {...prev, page: item.route}})}}
                                     >
                                         {navItems.map((item, index) => {
                                             return (<MenuItem key={index} id={item.name} onClick={() => {setState(prev => {return {...prev, page: item.route}})}} disableRipple>

@@ -2,6 +2,7 @@ import {useState, useEffect} from "react";
 import { TextField, Button, Box, Stack } from "@mui/material";
 import MessagePanel from "./MessagePanel";
 import {ReactComponent as InvertedLogo} from "../assets/Logo-rev.svg"
+import StepperComponent from "./Stepper";
 
 const ChatBox=()=>{
     const [state, setState] = useState({
@@ -58,6 +59,7 @@ const ChatBox=()=>{
 
     return(
         <Box sx={{display: 'flex', flexDirection: 'column', width: '100%', height: '100%', px: 4, py: 1, maxHeight: '90vh' }}>
+            <StepperComponent />
             <MessagePanel chatHistory={state.history} />
             <Box sx={{width:'100%'}}>
                 <Stack spacing={2} direction="row">

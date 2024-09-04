@@ -4,6 +4,7 @@ import ProblemPanel from '../components/ProblemPanel';
 import ChatBox from '../components/ChatBox';
 import CodeEditor from '../components/CodeEditor';
 import TestPanel from '../components/TestPanel';
+import StepperComponent from '../components/Stepper';
 import getCode from '../apis/code';
 
 const Code = () => {

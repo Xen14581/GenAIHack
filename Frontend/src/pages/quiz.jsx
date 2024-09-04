@@ -4,6 +4,7 @@ import {ReactComponent as Lock} from "../assets/quiz/locked.svg";
 import Button from '@mui/material/Button';
 import { useSelector } from 'react-redux'
 import getQuiz from '../apis/quiz';
+import StepperComponent from '../components/Stepper';
 
 const Quiz=()=>{       
   const selectedTopic = useSelector(state => state.topic.value)
@@ -74,6 +75,9 @@ const Quiz=()=>{
               px: 4
             }}
           >
+            <Grid2 item size={{xs: 12}}  sx={window.innerWidth > 1000 ? {height: 'max-content', maxHeight: "10vh", scrollY: 'hidden', mt:4}: {height: "max-content", maxHeight: "10vh", padding: '5px', mt:4}}>
+                <StepperComponent />
+            </Grid2>
             {quiz?.questions?.map((question, index)=>{
                 return (
                   <Grid2 
