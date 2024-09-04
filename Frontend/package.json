@@ -15,6 +15,7 @@
     "@mui/material": "^6.0.1",
     "material-ui-popup-state": "^5.3.0",
     "react": "latest",
+    "react-calendar-heatmap": "^1.9.0",
     "react-dom": "latest",
     "react-router-dom": "^6.26.1",
     "react-scripts": "latest"

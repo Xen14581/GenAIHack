@@ -4,6 +4,7 @@ import {
 import Example from "../pages/demo";
 import Chat from "../pages/chat"
 import Quiz from "../pages/quiz"
+import ReportCard from "../pages/report_card"
 
 const router = createBrowserRouter([
     {
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
     {
         path: "/learn/quiz/",
         element: <Quiz />,
+    },
+    {
+        path: "/report",
+        element: <ReportCard />,
     },
 ]);
 
