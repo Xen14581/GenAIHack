@@ -126,8 +126,14 @@ const Navbar = (props) => {
     }, [user, window.location])
 
     React.useEffect(() => {
+        if (state.page === window.location.pathname) {
+            return
+        }
         if(state.page !== "") {
-            window.location.href = state.page
+            if(!user) {
+                return window.location.href = "/auth/SignIn"
+            }
+            return window.location.href = state.page
         }
     }, [state.page])
 
