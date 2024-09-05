@@ -1,9 +1,28 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import { Typography, Stack, Button } from "@mui/material";
 import Infographic from "../assets/Infographic.png";
 import DSACard from "../components/Card";
+import { useSelector, useDispatch } from 'react-redux'
+import { setAllTopics } from "../reducers/topicSlice";
 
 const HomePage = () => {
+  const dispatch = useDispatch()
+
+  useLayoutEffect(() => {
+    dispatch(setAllTopics([
+      "Data Structures",
+      "Linear Data Structures",
+      "Non-Linear Data Structures",
+      "Arrays",
+      "Linked List",
+      "Stack",
+      "Queues",
+      "Sorting - Introduction",
+      "Bubble Sort",
+      "Quick Sort",
+    ]))
+  }, [])
+
   return (
     <Stack
       spacing={15}

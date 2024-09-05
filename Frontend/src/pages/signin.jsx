@@ -14,7 +14,7 @@ import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 // import { GoogleIcon, FacebookIcon, SitemarkIcon } from '../components/CustomIcons';
 import ForgotPassword from '../components/ForgotPassword';
-import { login, register } from '../apis/auth';
+import { login } from '../apis/auth';
 import { useDispatch } from 'react-redux';
 import { storeUserData } from '../reducers/userSlice';
 
@@ -49,13 +49,11 @@ const Card = styled(MuiCard)(({ theme }) => ({
     }),
   }));
 
-const SignUp = () => {
+const SignIn = () => {
     const [emailError, setEmailError] = React.useState(false);
     const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
     const [passwordError, setPasswordError] = React.useState(false);
     const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-    const [repasswordError, setRePasswordError] = React.useState(false);
-    const [repasswordErrorMessage, setRePasswordErrorMessage] = React.useState('');
     const [open, setOpen] = React.useState(false);
 
     let dispatch = useDispatch()
@@ -71,23 +69,23 @@ const SignUp = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const req = {
+          username: data.get("email"),
+          password: data.get("password")
+        }
         if(validateInputs()) {
-          const data = new FormData(event.currentTarget);
-          const req = {
-            username: data.get("email"),
-            password: data.get("password"),
-          }
-          let responseData = await register(req);
-          if(!Object.keys(responseData).includes("Error")) {
-            window.location.href = "/auth/SignIn"
-          }
+          let responseData = await login(req);
+          !Object.keys(responseData).includes("Error") && dispatch(storeUserData({
+              ...responseData,
+              username: data.get("email")
+          }))
         }
     };
     
     const validateInputs = () => {
         const email = document.getElementById('email');
         const password = document.getElementById('password');
-        const repassword = document.getElementById('repassword');
     
         let isValid = true;
     
@@ -108,15 +106,6 @@ const SignUp = () => {
             setPasswordError(false);
             setPasswordErrorMessage('');
         }
-
-        if (password.value !== repassword.value) {
-          setRePasswordError(true);
-          setRePasswordErrorMessage('Passwords do not match');
-          isValid = false;
-      } else {
-          setRePasswordError(false);
-          setRePasswordErrorMessage('');
-      }
     
         return isValid;
     };
@@ -129,7 +118,7 @@ const SignUp = () => {
               variant="h4"
               sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
             >
-              Sign Up
+              Sign in
             </Typography>
             <Box
               component="form"
@@ -187,42 +176,28 @@ const SignUp = () => {
                   color={passwordError ? 'error' : 'primary'}
                 />
               </FormControl>
-              <FormControl>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <FormLabel htmlFor="password">Retype Password</FormLabel>
-                </Box>
-                <TextField
-                  error={repasswordError}
-                  helperText={repasswordErrorMessage}
-                  name="repassword"
-                  placeholder="••••••"
-                  type="password"
-                  id="repassword"
-                  autoComplete="current-password"
-                  autoFocus
-                  required
-                  fullWidth
-                  variant="outlined"
-                  color={repasswordError ? 'error' : 'primary'}
-                />
-              </FormControl>
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+              />
               <ForgotPassword open={open} handleClose={handleClose} />
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
+                onClick={validateInputs}
               >
-                Sign up
+                Sign in
               </Button>
               <Typography sx={{ textAlign: 'center' }}>
-                Already have an account?{' '}
+                Don&apos;t have an account?{' '}
                 <span>
                   <Link
-                    href="/auth/signIn"
+                    href="/auth/signUp"
                     variant="body2"
                     sx={{ alignSelf: 'center' }}
                   >
-                    Sign in
+                    Sign up
                   </Link>
                 </span>
               </Typography>
@@ -253,4 +228,4 @@ const SignUp = () => {
     )
 }
 
-export default SignUp;
+export default SignIn;

@@ -9,7 +9,7 @@ const Loader = ({logoWidth, logoHeight, inverted}) => {
                 "0%": { transform: "rotate(0deg)" },
                 "100%": {  transform: "rotate(359deg)" },
             },
-            animation: "spin 32s linear infinite;",
+            animation: "spin 16s linear infinite;",
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center'

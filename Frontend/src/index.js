@@ -4,7 +4,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import App from './App';
 import theme from './theme';
-import Layout from './pages/layout';
 import store from './reducers/store'
 import { Provider } from 'react-redux'
 
@@ -15,10 +14,8 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <Layout>
-          <CssBaseline />
-          <App />
-        </Layout>
+        <CssBaseline />
+        <App />
       </ThemeProvider>
     </Provider>
   </React.StrictMode>,

@@ -20,7 +20,6 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
-import { BorderColor } from '@mui/icons-material';
 
 import { useSelector, useDispatch } from 'react-redux'
 import { removeUserData } from '../reducers/userSlice';
@@ -84,7 +83,7 @@ const Navbar = (props) => {
     })
 
     const location = window.location.pathname
-    const navItems = [{name: 'Home', route: '/'}, {name: 'Learn', route: '/learn/chat'}, {name: 'Report Card', route: '/report-card'}, {name: 'Why Sage?', route:'/why-sage'}];
+    const navItems = [{name: 'Home', route: '/home'}, {name: 'Learn', route: '/learn/chat'}, {name: 'Report Card', route: '/report-card'}, {name: 'Why Sage?', route:'/why-sage'}];
 
     const matchLocation = (location, route) => {
         let locSlice = "/" + location.split("/")[1]
@@ -120,8 +119,8 @@ const Navbar = (props) => {
         setAvatarEl(null);
     };
 
-    React.useLayoutEffect(() => {
-        if (user || location.startsWith("/auth")) {
+    React.useEffect(() => {
+        if (location.startsWith("/auth")) {
             setState(prev => { return {...prev, redirect: true} })
         }
     }, [user, window.location])
@@ -135,7 +134,7 @@ const Navbar = (props) => {
     return (
         <Box 
             sx={{ 
-                height: '100vh', overflow: location === "/" ? 'auto' : 'hidden' , px: window.innerWidth > 1000 ? '5rem' : 0
+                height: '100vh', overflow: location === "/home" ? 'auto' : 'hidden' , px: window.innerWidth > 1000 ? '5rem' : 0
             }}
         >
             <CssBaseline />

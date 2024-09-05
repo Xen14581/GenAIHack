@@ -1,5 +1,6 @@
 import React from "react";
 import {Box,Typography} from  "@mui/material";
+import Loader from "./Loader";
 
 const Message = ({role, message}) =>{
     return(
@@ -7,15 +8,16 @@ const Message = ({role, message}) =>{
             width:"100%",
             display: 'flex', 
             flexWrap: "wrap",
-            justifyContent: role === 'assistant' ? 'start' : 'end',
+            justifyContent: role === 'user' ? 'end' : 'start',
             px: 3,
+            py: 0.5
             }}
         >
             <Box sx={{
-                backgroundColor:role==="assistant"?"#DEEFFF":"#006CB8",
-                border: role === "assistant" ? "1px solid #006CB8" : "1px solid #006CB8",
+                backgroundColor: role==="user" ? "#006CB8" : "#DEEFFF",
+                border: role === "user" ? "1px solid #006CB8" : "1px solid #006CB8",
                 borderRadius: "10px",
-                maxWidth: '65%',
+                ...[role === "loading" ? {width: '65%'} : {maxWidth: '65%'}][0],
                 px: 1, 
                 overflowWrap: 'break-word'
             }}>
@@ -23,6 +25,7 @@ const Message = ({role, message}) =>{
                     {message}
                 </Typography> 
             </Box>
+            {role === 'loading' && <Loader logoHeight="3vh" logoWidth="3vw" inverted />}
         </Box>
     )
 }

@@ -13,12 +13,13 @@ const steps = [
 export default function StepperComponent() {
 
   const location = window.location.pathname
+  const activeStepIndex = steps.indexOf(steps.filter(value => value.route === location)[0])
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Stepper activeStep={steps.indexOf(steps.filter(value => value.route === location)[0])} alternativeLabel>
+      <Stepper activeStep={activeStepIndex} alternativeLabel>
         {steps.map((item, index) => (
-          <Step key={index}>
+          <Step key={index} onClick={() => {window.location.href = item.route}} sx={{cursor: 'pointer'}}>
             <StepLabel>{item.name}</StepLabel>
           </Step>
         ))}

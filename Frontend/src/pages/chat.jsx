@@ -3,13 +3,7 @@ import ChatBox from "../components/ChatBox";
 import { Box } from "@mui/material";
 
 const CourseChat=()=>{
-
-    return(
-        <>
-            <ChatBox />
-        </>
-        
-    )
+    return <ChatBox />
 }
 
 export default CourseChat

@@ -7,7 +7,7 @@ import getQuiz from '../apis/quiz';
 import StepperComponent from '../components/Stepper';
 
 const Quiz=()=>{       
-  const selectedTopic = useSelector(state => state.topic.value)
+  const selectedTopic = useSelector(state => state.topic.selectedTopic)
   
   const [quiz, setQuiz] = useState({})
 
@@ -104,12 +104,7 @@ const Quiz=()=>{
                               value={option} 
                               variant={question?.chosen_answer == option ? 'contained' :'outlined'} 
                               sx={{width: '100%'}} 
-                              onClick={(e)=>{handleSelect(e.target.value, index)
-                                // var temp_answer = answers
-                                // const new_answer  = {...temp_answer[index], chosen_answer: e.target.value}
-                                // temp_answer[index] = new_answer
-                                // setAnswers(temp_answer)
-                              }}
+                              onClick={(e)=>{handleSelect(e.target.value, index)}}
                             >
                               {option}
                             </Button>
@@ -121,6 +116,15 @@ const Quiz=()=>{
                 )
               })
             }
+            <Grid2 item size={{xs: 12}} sx={window.innerWidth > 1000 ? {height: 'max-content', maxHeight: "10vh", scrollY: 'hidden', mt:2}: {height: "max-content", maxHeight: "10vh", padding: '5px', mt:2}}>
+              <Button 
+                variant={'contained'} 
+                sx={{width: '100%'}} 
+                onClick={()=>{console.log("Quiz check api")}}
+              >
+                Submit Quiz
+              </Button>
+            </Grid2>
           </Grid2>
         :
         <>
@@ -131,7 +135,7 @@ const Quiz=()=>{
             <h3>Quiz Locked</h3>
           </Grid2>
           <Grid2 item size={{xs: 12}} sx={{display: 'flex', justifyContent: 'center', textAlign:'center',  color: '#002A47'}}>
-            <h5>We would reccomend you to first attempt learning the fundamental's of {selectedTopic} <a style={{color: "#"}} href='/'>here</a>. </h5>
+            <h5>We would reccomend you to first attempt learning the fundamental's of {selectedTopic} <a style={{color: "#"}} href='/home'>here</a>. </h5>
           </Grid2>
         </>
         }

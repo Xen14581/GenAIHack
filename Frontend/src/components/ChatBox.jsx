@@ -1,10 +1,14 @@
 import {useState, useEffect} from "react";
-import { TextField, Button, Box, Stack } from "@mui/material";
+import { TextField, IconButton, Box, Stack, InputAdornment } from "@mui/material";
 import MessagePanel from "./MessagePanel";
-import {ReactComponent as InvertedLogo} from "../assets/Logo-rev.svg"
 import StepperComponent from "./Stepper";
+import { useSelector } from 'react-redux'
+import getChatHistory from "../apis/chat";
+import SendIcon from '@mui/icons-material/Send';
 
 const ChatBox=()=>{
+    const selectedTopic = useSelector(state => state.topic.selectedTopic)
+
     const [state, setState] = useState({
         history: [],
         textValue: ''
@@ -20,72 +24,72 @@ const ChatBox=()=>{
     }
 
     const handleSubmit = () => {
+        if(!state.textValue) {
+            return
+        }
         setState(prev => {
             return {
-                history: [...prev.history, {'role': 'user', 'content': prev.textValue}],
+                history: [...prev.history, {'role': 'user', 'parts': prev.textValue}],
+                textValue: ''
+            }
+        })
+        setState(prev => {
+            return {
+                history: [...prev.history, {'role': 'loading', 'parts': ''}],
                 textValue: ''
             }
         })
     }
 
+    const handleEnter = (e) => {
+        if (e.key === 'Enter') {
+            handleSubmit()
+        }
+    }
+
     useEffect(() => {
-        const response = [
-            {'role': 'user', 'content': 'Hello'},
-            {'role': 'assistant', 'content': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
-            {'role': 'user', 'content': 'Hello'},
-            {'role': 'assistant', 'content': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
-            {'role': 'user', 'content': 'Hello'},
-            {'role': 'assistant', 'content': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
-            {'role': 'user', 'content': 'Hello'},
-            {'role': 'assistant', 'content': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
-            {'role': 'user', 'content': 'Hello'},
-            {'role': 'assistant', 'content': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
-            {'role': 'user', 'content': 'Hello'},
-            {'role': 'assistant', 'content': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
-            {'role': 'user', 'content': 'Hello'},
-            {'role': 'assistant', 'content': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
-            {'role': 'user', 'content': 'Hello'},
-            {'role': 'assistant', 'content': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
-        ]
-        setState(prev => {
+        const getdata = async () => {
+            let data = await getChatHistory()
+            setState(prev => {
             return {
                 ...prev,
-                history: response
-            }}
-        )
-    }, [])
-
-    
+                history: data
+            }
+            })
+        }
+        getdata()
+    }, [selectedTopic]) 
 
     return(
         <Box sx={{display: 'flex', flexDirection: 'column', width: '100%', height: '100%', px: 4, py: 1, maxHeight: '90vh' }}>
-            <StepperComponent />
-            <MessagePanel chatHistory={state.history} />
+            <Box sx={{mt: 3}}>
+                <StepperComponent />
+            </Box>
+            <MessagePanel chatHistory={[...state.history].reverse()} />
             <Box sx={{width:'100%'}}>
                 <Stack spacing={2} direction="row">
-                    {/* <TextField label="Message SAGE.AI" sx={{width:"100%"}}/>
-                    <Button variant="outlined">Send</Button>
-                    <Button variant="contained" disabled>Evaluate</Button> */}
                     <TextField
                         label="Message SAGE.AI"
                         sx={{ width: "100%" }}
                         value={state.textValue}
                         onChange={handleInputChange}
-                        // slotProps={{
-                        //     input: {
-                        //     endAdornment: (
-                        //         <InputAdornment position="end">
-                        //             <IconButton>
-                        //                 <img
-                        //                 src={arrow}
-                        //                 style={{ width: 30, height: 30 }}
-                        //                 onClick={handleSubmit}
-                        //                 />
-                        //             </IconButton>
-                        //         </InputAdornment>
-                        //     ),
-                        //     },
-                        // }}
+                        onKeyDown={handleEnter}
+                        slotProps={{
+                            input: {
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton onClick={handleSubmit}>
+                                        {/* <img
+                                        src={arrow}
+                                        style={{ width: 30, height: 30 }}
+                                        onClick={handleSubmit}
+                                        /> */}
+                                        <SendIcon />
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                            },
+                        }}
                     />
                 </Stack>
             </Box>

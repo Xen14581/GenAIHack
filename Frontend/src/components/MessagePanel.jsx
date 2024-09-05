@@ -29,9 +29,9 @@ const MessagePanel = ({ chatHistory }) => {
                 <InvertedLogo width="30%" height="30%" opacity="0.045" />
             </Box>
             {/* Chats */}
-            <Box sx={{width: '100%', height: '100%', overflowY: 'auto'}}>
+            <Box sx={{width: '100%', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column-reverse'}}>
                 {chatHistory.map((message, index) => {
-                    return <Message key={index} role={message.role} message={message.content} /> 
+                    return <Message key={index} role={message.role} message={message.parts} /> 
                 })}
             </Box>
         </Box>

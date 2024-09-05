@@ -1,10 +1,19 @@
 import Navbar from "../components/Navbar";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
-const Layout = (props) => {
+const Layout = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (window.location.pathname === "/") {
+        navigate("/home") 
+    }
+  })
+
   return (
     // <Box sx={{mx: window.innerWidth > 1000 ? '5rem' : 0, overflowY: 'auto'}}>
       <Navbar>
-        {props?.children}
+        <Outlet />
       </Navbar>
     // </Box>
   )

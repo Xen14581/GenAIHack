@@ -10,27 +10,25 @@ import { setTopic } from "../reducers/topicSlice";
 
 const SideBar=()=>{
 
-    const selectedTopic = useSelector(state => state.topic.value)
+    const selectedTopic = useSelector(state => state.topic.selectedTopic)
+    const topics = useSelector(state => state.topic.topics)
     const dispatch = useDispatch()
 
-    const topics=[
-        "Data Structures",
-        "Linear Data Structures",
-        "Non-Linear Data Structures",
-        "Arrays",
-        "Linked List",
-        "Stack",
-        "Queues",
-        "Sorting - Introduction",
-        "Bubble Sort",
-        "Quick Sort",
-    ];
-
-    // const [selectedTopic,setSelectedTopic]=useState("");
+    // const topics=[
+    //     "Data Structures",
+    //     "Linear Data Structures",
+    //     "Non-Linear Data Structures",
+    //     "Arrays",
+    //     "Linked List",
+    //     "Stack",
+    //     "Queues",
+    //     "Sorting - Introduction",
+    //     "Bubble Sort",
+    //     "Quick Sort",
+    // ];
     
-    const handleSelectTopic=(index)=>{
-        // setSelectedTopic(index);
-        dispatch(setTopic(index))
+    const handleSelectTopic=(topic)=>{
+        dispatch(setTopic(topic))
     }
 
     return(
