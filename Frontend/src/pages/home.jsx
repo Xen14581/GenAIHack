@@ -72,10 +72,16 @@ const HomePage = () => {
             fontFamily: "Montserrat",
           }}
         >
-          DSA FUNDAMENTALS
+          DSA fundamentals
         </Typography>
       </Stack>
-      <Stack gap={15} direction={"row"} flexWrap={"wrap"} width={"100%"}>
+      <Stack
+        gap={8}
+        direction={"row"}
+        flexWrap={"wrap"}
+        width={"100%"}
+        justifyContent={"center"}
+      >
         <DSACard
           title={"Stack"}
           content={
