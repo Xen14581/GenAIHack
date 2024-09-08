@@ -4,7 +4,7 @@ export const topicSlice = createSlice({
   name: 'topic',
   initialState: {
     selectedTopic: JSON.parse(localStorage.getItem("selectedTopic") || '{}'),
-    topics: JSON.parse(localStorage.getItem("topics") || '{}')
+    topics: JSON.parse(localStorage.getItem("topics") || '[]')
   },
   reducers: {
     setTopic: (state, action) => {
