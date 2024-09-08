@@ -1,40 +1,18 @@
-const response = {
-    "programming_question": "Write a function that returns the square of a number.",
-    "template_code": "def square(n):\n    # Your code here\n    pass",
-    "test_cases": [
-        {
-            "input": [5],
-            "expected_output": "25"
-        },
-        {
-            "input": [0],
-            "expected_output": "0"
-        },
-        {
-            "input": [5],
-            "expected_output": "25"
-        },
-        {
-            "input": [0],
-            "expected_output": "0"
-        },
-        {
-            "input": [5],
-            "expected_output": "25"
-        },
-        {
-            "input": [0],
-            "expected_output": "0"
-        },
-    ]
-}
-
 import apiUrl from "./baseurl";
+import axios from "axios";
 
-const getCode = async () => {
-    return await new Promise((resolve, reject) => {
-        resolve(response)
-    })
+const getCode = async (token, topic_id) => {
+    const response = await axios.get(apiUrl + "/module/" + topic_id + "/coding_round/", {headers: {Authorization: token}})
+    if (response.status === 200) {
+        return response.data
+    }
 }
 
-export default getCode;
+const evaluateCode = async (token, topic_id, code) => {
+    const response = await axios.post(apiUrl + "/module/" + topic_id + "/coding_round/evaluate", {code: code}, {headers: {Authorization: token}})
+    if (response.status === 200) {
+        return response.data
+    }
+}
+
+export { getCode, evaluateCode };

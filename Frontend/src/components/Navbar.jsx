@@ -83,7 +83,7 @@ const Navbar = (props) => {
     })
 
     const location = window.location.pathname
-    const navItems = [{name: 'Home', route: '/home'}, {name: 'Learn', route: '/learn/chat'}, {name: 'Report Card', route: '/report-card'}, {name: 'Why Sage?', route:'/why-sage'}];
+    const navItems = [{name: 'Home', route: '/home'}, {name: 'Learn', route: '/learn/chat'}, {name: 'Report Card', route: '/report-card'}];
 
     const matchLocation = (location, route) => {
         let locSlice = "/" + location.split("/")[1]
@@ -108,7 +108,7 @@ const Navbar = (props) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleOpenClose = (event) => {
-      setAnchorEl(event.currentTarget);
+      open ? setAnchorEl(null) : setAnchorEl(event.currentTarget);
     };
 
     const handleClose = (e) => {
@@ -119,6 +119,10 @@ const Navbar = (props) => {
         setAvatarEl(null);
     };
 
+    const handleRedirect = () => {
+        window.location.href = "/auth/signIn"
+    }
+
     React.useEffect(() => {
         if (location.startsWith("/auth")) {
             setState(prev => { return {...prev, redirect: true} })
@@ -126,14 +130,12 @@ const Navbar = (props) => {
     }, [user, window.location])
 
     React.useEffect(() => {
-        if (state.page === window.location.pathname) {
-            return
-        }
-        if(state.page !== "") {
-            if(!user) {
-                return window.location.href = "/auth/SignIn"
+        if(state.page !== window.location.pathname && state.page !== "") {
+            if(String(user) === "null") {
+                window.location.href = "/auth/SignIn"
+            } else {
+                window.location.href = state.page
             }
-            return window.location.href = state.page
         }
     }, [state.page])
 
@@ -260,7 +262,7 @@ const Navbar = (props) => {
                                         id="demo-customized-menu"
                                         anchorEl={anchorEl}
                                         open={open}
-                                        onClose={() => {setState(prev => {return {...prev, page: item.route}})}}
+                                        onClose={handleOpenClose}
                                     >
                                         {navItems.map((item, index) => {
                                             return (<MenuItem key={index} id={item.name} onClick={() => {setState(prev => {return {...prev, page: item.route}})}} disableRipple>
@@ -274,7 +276,7 @@ const Navbar = (props) => {
 
                             {/* Avatar */}
                             <Grid2 
-                                size={window.innerWidth > 1000 ? 2 : 3}
+                                size={window.innerWidth > 1000 ? user ? 2 : 3 : user ? 3 : 4}
                                 sx={
                                     window.innerWidth > 1000 
                                     ? {
@@ -286,64 +288,83 @@ const Navbar = (props) => {
                                     }
                                 } 
                             >
-                                <IconButton
-                                    onClick={handleClick}
-                                    size="small"
-                                    // sx={{ ml: 2 }}
-                                    aria-controls={avatarMenuOpen ? 'account-menu' : undefined}
-                                    aria-haspopup="true"
-                                    aria-expanded={avatarMenuOpen ? 'true' : undefined}
-                                >
-                                    <Avatar src="/broken-image.jpg" sx={window.innerWidth > 1000 ? { bgcolor: blue[600] , width: 35, height: 35} : { bgcolor: blue[600] , width: 30, height: 30}}/>
-                                </IconButton>
-                                <Menu
-                                    anchorEl={avatarEl}
-                                    id="account-menu"
-                                    open={avatarMenuOpen}
-                                    onClose={handleClose}
-                                    onClick={handleClose}
-                                    slotProps={{
-                                    paper: {
-                                        elevation: 0,
-                                        sx: {
-                                        overflow: 'visible',
-                                        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                                        mt: 1.5,
-                                        '& .MuiAvatar-root': {
-                                            width: 32,
-                                            height: 32,
-                                            ml: -0.5,
-                                            mr: 1,
+                                {user 
+                                ? 
+                                <>
+                                    <IconButton
+                                        onClick={handleClick}
+                                        size="small"
+                                        // sx={{ ml: 2 }}
+                                        aria-controls={avatarMenuOpen ? 'account-menu' : undefined}
+                                        aria-haspopup="true"
+                                        aria-expanded={avatarMenuOpen ? 'true' : undefined}
+                                    >
+                                        <Avatar src="/broken-image.jpg" sx={window.innerWidth > 1000 ? { bgcolor: blue[600] , width: 35, height: 35} : { bgcolor: blue[600] , width: 30, height: 30}}/>
+                                    </IconButton>
+                                    <Menu
+                                        anchorEl={avatarEl}
+                                        id="account-menu"
+                                        open={avatarMenuOpen}
+                                        onClose={handleClose}
+                                        onClick={handleClose}
+                                        slotProps={{
+                                        paper: {
+                                            elevation: 0,
+                                            sx: {
+                                            overflow: 'visible',
+                                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                                            mt: 1.5,
+                                            '& .MuiAvatar-root': {
+                                                width: 32,
+                                                height: 32,
+                                                ml: -0.5,
+                                                mr: 1,
+                                            },
+                                            '&::before': {
+                                                content: '""',
+                                                display: 'block',
+                                                position: 'absolute',
+                                                top: 0,
+                                                right: 14,
+                                                width: 10,
+                                                height: 10,
+                                                bgcolor: 'background.paper',
+                                                transform: 'translateY(-50%) rotate(45deg)',
+                                                zIndex: 0,
+                                            },
+                                            },
                                         },
-                                        '&::before': {
-                                            content: '""',
-                                            display: 'block',
-                                            position: 'absolute',
-                                            top: 0,
-                                            right: 14,
-                                            width: 10,
-                                            height: 10,
-                                            bgcolor: 'background.paper',
-                                            transform: 'translateY(-50%) rotate(45deg)',
-                                            zIndex: 0,
-                                        },
-                                        },
-                                    },
+                                        }}
+                                        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                                        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                                    >
+                                        <MenuItem id="profile" onClick={handleClose}>
+                                            <Avatar /> Profile
+                                        </MenuItem>
+                                        <Divider />
+                                        <MenuItem id="logout" onClick={handleClose}>
+                                            <ListItemIcon>
+                                                <Logout fontSize="small" />
+                                            </ListItemIcon>
+                                            Logout
+                                        </MenuItem>
+                                    </Menu>
+                                </> 
+                                :
+                                <>
+                                <Button
+                                    variant="outlined"
+                                    sx={{
+                                        backgroundColor: "white",
+                                        color: "#006CB8",
+                                        border: "1px solid #006CB8",
+                                        width: "80%",
                                     }}
-                                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                                >
-                                    <MenuItem id="profile" onClick={handleClose}>
-                                        <Avatar /> Profile
-                                    </MenuItem>
-                                    <Divider />
-                                    <MenuItem id="logout" onClick={handleClose}>
-                                        <ListItemIcon>
-                                            <Logout fontSize="small" />
-                                        </ListItemIcon>
-                                        Logout
-                                    </MenuItem>
-                                </Menu>
+                                    onClick={handleRedirect}
+                                    >
+                                    {"Login/Register"}
+                                </Button>
+                                </>}
                             </Grid2>
                         </Grid2>
                     </AppBar>

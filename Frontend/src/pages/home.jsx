@@ -1,36 +1,45 @@
-import React, { useLayoutEffect } from "react";
-import { Typography, Stack, Button } from "@mui/material";
+import React, { useLayoutEffect, useRef } from "react";
+import { Typography, Stack, Button, Divider, Grid2 } from "@mui/material";
 import Infographic from "../assets/Infographic.png";
 import DSACard from "../components/Card";
 import { useSelector, useDispatch } from 'react-redux'
 import { setAllTopics } from "../reducers/topicSlice";
+import { getTopics } from "../apis/topics";
 
 const HomePage = () => {
+  const user = useSelector(state => state.user.value)
+  const topics = useSelector(state => state.topic.topics)
   const dispatch = useDispatch()
+  const topicsRef = useRef(null)
+
+  const handleScroll = () => {
+    topicsRef.current.scrollIntoView({behavior: 'smooth', block: 'start'})
+  }
+
+  const handleRedirect = () => {
+    if (user) {
+      window.location.href = "/learn/chat"
+    } else {
+      window.location.href = "/auth/signIn"
+    }
+  }
 
   useLayoutEffect(() => {
-    dispatch(setAllTopics([
-      "Data Structures",
-      "Linear Data Structures",
-      "Non-Linear Data Structures",
-      "Arrays",
-      "Linked List",
-      "Stack",
-      "Queues",
-      "Sorting - Introduction",
-      "Bubble Sort",
-      "Quick Sort",
-    ]))
+    const getdata = async () => {
+      const data = await getTopics()
+      dispatch(setAllTopics(data))
+    }
+    getdata()
   }, [])
 
   return (
     <Stack
-      spacing={15}
+      spacing={8}
       direction="column"
       sx={{
-        height: "100%",
+        height: "min-content",
         width: "100%",
-        paddingTop: "7vh",
+        py: "7vh",
       }}
     >
       <Stack
@@ -45,7 +54,7 @@ const HomePage = () => {
             Discover Learning through{" "}
             <span style={{ color: "#002A47" }}>SAGE.AI</span>
           </Typography>
-          <Typography>
+          <Typography variant="h5">
             Use the power of guided questioning to discover paradigms of DSA
             from within
           </Typography>
@@ -57,6 +66,7 @@ const HomePage = () => {
                 border: "1px solid #006CB8",
                 width: "25%",
               }}
+              onClick={handleScroll}
             >
               Explore
             </Button>
@@ -68,13 +78,17 @@ const HomePage = () => {
                 border: "1px solid #006CB8",
                 width: "25%",
               }}
+              onClick={handleRedirect}
             >
-              Login
+              {user ? "Start Learning" : "Login"}
             </Button>
           </Stack>
         </Stack>
         <img src={Infographic} sx={{ width: "50%", height: "50%" }} />
       </Stack>
+
+      <Divider />
+
       <Stack
         direction="column"
         justifyContent={"center"}
@@ -82,6 +96,7 @@ const HomePage = () => {
         width={"100%"}
         height={"50%"}
         flexWrap={"wrap"}
+        ref={topicsRef}
       >
         <Typography
           variant="h2"
@@ -94,50 +109,16 @@ const HomePage = () => {
           DSA FUNDAMENTALS
         </Typography>
       </Stack>
-      <Stack gap={15} direction={"row"} flexWrap={"wrap"} width={"100%"}>
-        <DSACard
-          title={"Stack"}
-          content={
-            "Helps the student build thorough understanding about the various types and operations of stack"
-          }
-        />
-        <DSACard
-          title={"Queue"}
-          content={
-            "Helps the student build thorough understanding about the various types and operations on queue"
-          }
-        />
-        <DSACard
-          title={"Heap"}
-          content={
-            "Helps the student build thorough understanding about the various types and operations on heap"
-          }
-        />
-        <DSACard
-          title={"Tree"}
-          content={
-            "Helps the student build thorough understanding about the various traversals and types of trees"
-          }
-        />
-        <DSACard
-          title={"Graph"}
-          content={
-            "Helps the student build thorough understanding about the various traversals of graphs"
-          }
-        />
-        <DSACard
-          title={"Sorting algorithms"}
-          content={
-            "Helps the student build thorough understanding about the various types of sorting algorithms"
-          }
-        />
-        <DSACard
-          title={"Searching algorithms"}
-          content={
-            "Helps the student build thorough understanding about the various types of searcing algorithms"
-          }
-        />
-      </Stack>
+      
+      <Grid2 container columns={12} spacing={2} sx={{width: '100%', height: '50vh', display: 'flex', justifyContent: 'center'}}>
+        {topics?.map((topic, idx) => 
+          <Grid2 item size={4} key={idx} sx={{height: '100%'}}>
+            <DSACard
+              topic={topic}
+            />
+          </Grid2>
+        )}
+      </Grid2>
     </Stack>
   );
 };

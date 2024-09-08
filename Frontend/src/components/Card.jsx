@@ -5,37 +5,44 @@ import {
   Button,
   Box,
   CardHeader,
+  CardActions
 } from "@mui/material";
+import { setTopic } from "../reducers/topicSlice";
+import { useDispatch, useSelector } from "react-redux";
+import Markdown from "react-markdown";
 
-const DSACard = ({ title, content }) => {
+const DSACard = ({ topic }) => {
+  const user = useSelector(state => state.user.value)
+  const dispatch = useDispatch()
+
+  const handleClick = () => {  
+    dispatch(setTopic(topic))
+    if (user) {
+      window.location.href = "/learn/chat"
+    } else {
+      window.location.href = "/auth/signIn"
+    }
+  }
+
+  let title = topic.title;
+  let content = topic.description
+
   return (
     <Card
       sx={{
         display: "flex",
         flexDirection: "column",
         flexWrap: "wrap",
-        maxWidth: "25%",
-        maxHeight: "100%",
+        justifyContent: 'space-between',
+        p: 2,
+        width: "100%",
+        height: "100%",
         border: "1px solid black",
         borderRadius: "10px",
-        "&:hover": {
-          backgroundColor: "#006CB8",
-          "& *": {
-            color: "white",
-          },
-          "& Button": {
-            backgroundColor: "white",
-            color: "#006CB8",
-          },
-        },
       }}
     >
       <CardContent
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          padding: "5",
-        }}
+        sx={{padding: "5" }}
       >
         <Typography
           variant="h4"
@@ -51,28 +58,36 @@ const DSACard = ({ title, content }) => {
           {title}
         </Typography>
         <Typography
-          variant="h6"
+          variant="span"
           sx={{
             wordBreak: "break-word",
             whiteSpace: "normal",
             color: "#006CB8",
             overflowWrap: "wrap",
             marginBottom: "2vh",
+            fontSize: 18
           }}
         >
-          {content}
+          <Markdown>
+          {"This module includes:\n1. Introduction to Stack\n2. Stack Operations\n3. Quiz\n4. Code"}
+          </Markdown>
         </Typography>
+      </CardContent>
+      <CardActions sx={{display: 'flex', justifyContent: 'center'}}>
         <Button
           variant="contained"
+          size="large"
           sx={{
-            width: "70%",
+            width: "90%",
             justifyContent: "start",
             backgroundColor: "#006CB8",
           }}
+          // endIcon={}
+          onClick={handleClick}
         >
-          Chat
+          Start Learning
         </Button>
-      </CardContent>
+      </CardActions>
     </Card>
   );
 };

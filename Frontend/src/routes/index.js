@@ -1,6 +1,5 @@
 import {
     createBrowserRouter,
-    Outlet,
 } from "react-router-dom";
 import Chat from "../pages/chat"
 import Code from "../pages/code";
@@ -11,6 +10,7 @@ import SignUp from "../pages/signup";
 import AuthLayout from "../pages/authLayout";
 import HomePage from "../pages/home";
 import Layout from "../pages/layout";
+import ReportCard from "../pages/report_card";
 
 const router = createBrowserRouter([
     // Auth routes
@@ -64,7 +64,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/report-card",
-                element: <>Report Card</>
+                element: <ReportCard />
             }
         ]
     },

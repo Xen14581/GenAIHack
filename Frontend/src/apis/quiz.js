@@ -1,57 +1,18 @@
 import apiUrl from "./baseurl";
+import axios from "axios";
 
-const getQuiz = async () => {
-    return await new Promise((resolve, reject) => {
-        resolve({
-            "title": "Basics of stacks",
-            "description": "Learn the basics of Python.",
-            "questions": [
-            {
-                "text": "What is Python?",
-                "options": ["Programming Language", "Snake", "Both"],
-                "correct_answer": "Programming Language"
-            },
-            {
-                "text": "What is a Stack",
-                "options": ["Data Structure", "CSS element", "Both"],
-                "correct_answer": "Data Structure"
-            },
-            {
-                "text": "Programming Language in which DSA is tough to implemet?",
-                "options": ["SQL", "Python", "Java"],
-                "correct_answer": "Python"
-            },{
-                "text": "What is Python?",
-                "options": ["Programming Language", "Snake", "Both"],
-                "correct_answer": "Programming Language"
-            },
-            {
-                "text": "What is a Stack",
-                "options": ["Data Structure", "CSS element", "Both"],
-                "correct_answer": "Data Structure"
-            },
-            {
-                "text": "Programming Language in which DSA is tough to implemet?",
-                "options": ["SQL", "Python", "Java"],
-                "correct_answer": "Python"
-            },{
-                "text": "What is Python?",
-                "options": ["Programming Language", "Snake", "Both"],
-                "correct_answer": "Programming Language"
-            },
-            {
-                "text": "What is a Stack",
-                "options": ["Data Structure", "CSS element", "Both"],
-                "correct_answer": "Data Structure"
-            },
-            {
-                "text": "Programming Language in which DSA is tough to implemet?",
-                "options": ["SQL", "Python", "Java"],
-                "correct_answer": "Python"
-            }
-            ]
-        })
-    })
+const getQuiz = async (token, topic_id) => {
+    const response = await axios.get(apiUrl + "/module/" + topic_id + "/quiz/", {headers: {Authorization: token}})
+    if (response.status === 200) {
+        return response.data
+    }
 }
 
-export default getQuiz;
+const evaluateQuiz = async(token, topic_id, answers) => {
+    const response = await axios.post(apiUrl + "/module/" + topic_id + "/quiz/evaluate", answers, {headers: {Authorization: token}})
+    if (response.status === 200) {
+        return response.data
+    }
+}
+
+export {getQuiz, evaluateQuiz};

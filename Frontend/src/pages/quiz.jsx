@@ -1,15 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Grid2 } from "@mui/material";
 import {ReactComponent as Lock} from "../assets/quiz/locked.svg";
 import Button from '@mui/material/Button';
 import { useSelector } from 'react-redux'
-import getQuiz from '../apis/quiz';
+import {getQuiz, evaluateQuiz} from '../apis/quiz';
 import StepperComponent from '../components/Stepper';
 
 const Quiz=()=>{       
   const selectedTopic = useSelector(state => state.topic.selectedTopic)
+  const user = useSelector(state => state.user.value)
+  const scroll = useRef(null)
   
   const [quiz, setQuiz] = useState({})
+  const [score, setScore] = useState({
+    percentage_score:null,
+    score:null,
+    total_questions:null
+  })
 
   const handleSelect = (option, q_idx) => {
     setQuiz(prev => {
@@ -22,9 +29,26 @@ const Quiz=()=>{
     })
   }
 
+  const submitQuiz = async () => {
+    let answers = quiz.questions.map(question => {
+      return {
+        "answer": question.chosen_answer,
+        "id": question.id,
+        "text": question.text
+      }
+    })
+    const scores = await evaluateQuiz(user.token, selectedTopic.id, answers)
+    setScore(scores)
+    scroll.current.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    })
+  }
+
   useEffect(() => {
     const getdata = async () => {
-      let data = await getQuiz()
+      let data = await getQuiz(user.token, selectedTopic.id)
       setQuiz(data)
     }
     getdata()
@@ -52,6 +76,7 @@ const Quiz=()=>{
           <Grid2 
             container 
             item 
+            ref={scroll}
             size={{xs: 12}} 
             sx={window.innerWidth > 1000 ? {
               display: 'flex', 
@@ -75,8 +100,18 @@ const Quiz=()=>{
               px: 4
             }}
           >
-            <Grid2 item size={{xs: 12}}  sx={window.innerWidth > 1000 ? {height: 'max-content', maxHeight: "10vh", scrollY: 'hidden', mt:4}: {height: "max-content", maxHeight: "10vh", padding: '5px', mt:4}}>
+            <Grid2 item size={{xs: 12}} sx={window.innerWidth > 1000 ? {height: 'max-content', maxHeight: "10vh", scrollY: 'hidden', mt:4}: {height: "max-content", maxHeight: "10vh", padding: '5px', mt:4}}>
                 <StepperComponent />
+            </Grid2>
+            <Grid2 item size={{xs: 12}} sx={window.innerWidth > 1000 ? {height: 'max-content', maxHeight: "5vh", scrollY: 'hidden', display: 'flex', justifyContent: 'center', flexDirection: 'column'}: {height: "max-content", maxHeight: "5vh", padding: '5px', display: 'flex', justifyContent: 'center'}}>
+                <h3 style={{margin: 0}}>Passing Score: 80% </h3>
+                <h4 style={{margin: 0}}>
+                  {score.score 
+                  ? score.score >= 80 
+                    ? "Your score: " + score.score + "%!\nYou can move onto your coding practice now!" 
+                    : "Your score: " + score.score + "%!\nLearn more and try again!"
+                  : null}
+                </h4>
             </Grid2>
             {quiz?.questions?.map((question, index)=>{
                 return (
@@ -120,7 +155,7 @@ const Quiz=()=>{
               <Button 
                 variant={'contained'} 
                 sx={{width: '100%'}} 
-                onClick={()=>{console.log("Quiz check api")}}
+                onClick={() => {submitQuiz()}}
               >
                 Submit Quiz
               </Button>
@@ -135,7 +170,7 @@ const Quiz=()=>{
             <h3>Quiz Locked</h3>
           </Grid2>
           <Grid2 item size={{xs: 12}} sx={{display: 'flex', justifyContent: 'center', textAlign:'center',  color: '#002A47'}}>
-            <h5>We would reccomend you to first attempt learning the fundamental's of {selectedTopic} <a style={{color: "#"}} href='/home'>here</a>. </h5>
+            <h5>We would reccomend you to first attempt learning the fundamental's of {selectedTopic.title} <a style={{color: "#"}} href='/home'>here</a>. </h5>
           </Grid2>
         </>
         }

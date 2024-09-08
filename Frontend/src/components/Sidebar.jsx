@@ -13,19 +13,6 @@ const SideBar=()=>{
     const selectedTopic = useSelector(state => state.topic.selectedTopic)
     const topics = useSelector(state => state.topic.topics)
     const dispatch = useDispatch()
-
-    // const topics=[
-    //     "Data Structures",
-    //     "Linear Data Structures",
-    //     "Non-Linear Data Structures",
-    //     "Arrays",
-    //     "Linked List",
-    //     "Stack",
-    //     "Queues",
-    //     "Sorting - Introduction",
-    //     "Bubble Sort",
-    //     "Quick Sort",
-    // ];
     
     const handleSelectTopic=(topic)=>{
         dispatch(setTopic(topic))
@@ -58,11 +45,11 @@ const SideBar=()=>{
                                         sx={{ cursor:"pointer" }}
                                         onClick={()=>handleSelectTopic(topic)}
                                         primaryTypographyProps = {{
-                                            color:selectedTopic===topic?"#002A47":"#000000",
-                                            fontWeight:selectedTopic===topic?"800":"400",
+                                            color: selectedTopic.title === topic.title ? "#002A47" : "#000000",
+                                            fontWeight: selectedTopic.title === topic.title ? "800" : "400",
                                             
                                         }}
-                                        primary={topic} 
+                                        primary={topic.title} 
                                     />
                                 </ListItem>
                             ))
@@ -82,7 +69,7 @@ const SideBar=()=>{
                     <Select
                     displayEmpty
                     variant="standard"
-                    value={selectedTopic}
+                    value={selectedTopic.title}
                     onChange={(event)=>handleSelectTopic(event.target.value)}
                     input={<OutlinedInput />}
                     inputProps={{ 'aria-label': 'Without label' }}
@@ -92,11 +79,10 @@ const SideBar=()=>{
                     </MenuItem>
                     {topics.map((topic, index) => (
                         <MenuItem
-                        key={index}
-                        value={topic}
-
+                            key={index}
+                            value={topic.title}
                         >
-                        {topic}
+                            {topic.title}
                         </MenuItem>
                     ))}
                     </Select>

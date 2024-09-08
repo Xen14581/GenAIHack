@@ -4,19 +4,38 @@ import ProblemPanel from '../components/ProblemPanel';
 import ChatBox from '../components/ChatBox';
 import CodeEditor from '../components/CodeEditor';
 import TestPanel from '../components/TestPanel';
-import StepperComponent from '../components/Stepper';
-import getCode from '../apis/code';
+import { getCode, evaluateCode } from '../apis/code';
+import { useSelector } from 'react-redux';
 
 const Code = () => {
     const [problem, setProblem] = useState({})
+    const selectedTopic = useSelector(state => state.topic.selectedTopic)
+    const user = useSelector(state => state.user.value)
+
+    const submitCode = async (code) => {
+        const data = await evaluateCode(user.token, selectedTopic.id, code)
+        console.log(data)
+        setProblem(prev => {
+            return {
+                ...prev,
+                test_cases: data.results
+            }
+        })
+        let trigger = `Student Code:\n${code}\nTest Cases:\n\n${data.results.map(tcase => {
+            return ['Input:',String(tcase.input),'Output:',String(tcase.user_output) ,'Expected Output:',String(tcase.expected_output)].join("\n")
+        }).join("\n\n")}`
+        localStorage.setItem("trigger", trigger)
+    }
 
     useLayoutEffect(() => {
         const getdata = async () => {
-            const data = await getCode()
+            const data = await getCode(user.token, selectedTopic.id)
             setProblem(data)
         }
         getdata()
-    }, [problem])
+    }, [])
+
+    console.log(problem.test_cases)
 
     return (
         <>
@@ -28,7 +47,7 @@ const Code = () => {
                     <Grid size={6}>
                         <Stack style={{ height: '100%'}} spacing={1}>
                             <Box sx={{ height: '60%', width: '100%'}}>
-                                <CodeEditor codeTemplate={problem.template_code} />
+                                <CodeEditor codeTemplate={problem.template_code} onSubmit={submitCode} />
                             </Box>
                             <Box sx={{ height: '40%', width: '100%'}}>
                                 <TestPanel testCases={problem.test_cases} />
@@ -36,7 +55,7 @@ const Code = () => {
                         </Stack>
                     </Grid>
                     <Grid size={3} sx={{ border: 1, borderColor: '#aaa', borderWidth: '1px', borderRadius: '12px' }}>
-                        <ChatBox chatHistory={problem.chatHistory} />
+                        <ChatBox />
                     </Grid>
                 </Grid>
             }

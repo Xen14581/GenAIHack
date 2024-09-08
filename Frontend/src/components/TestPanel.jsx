@@ -1,5 +1,4 @@
 import { Stack, Box, Typography, Fab, Grid2 as Grid, Button } from "@mui/material";
-import { blue } from "@mui/material/colors";
 import { useState } from "react";
 
 const TestPanel = ({testCases}) => {
@@ -36,19 +35,34 @@ const TestPanel = ({testCases}) => {
                     )
                 })}
             </Stack>
+
+            {/* Test cases */}
             <Stack sx={{px: 2, width: '100%'}} spacing={1}>
                 <Typography>
                     Input
                 </Typography>
-                <Typography sx={{backgroundColor: '#ddd', borderRadius: '5px', px: 2, py: 1}}>
-                    {testCases?.[state.selected]?.input}
+                <Typography sx={{backgroundColor: '#ddd', borderRadius: '5px', px: 2, py: testCases?.[state.selected]?.user_output ? 0 : 1}}>
+                    {String(testCases?.[state.selected]?.input)}
                 </Typography>
                 <Typography>
                     Expected Output
                 </Typography>
-                <Typography sx={{backgroundColor: '#ddd', borderRadius: '5px', px: 2, py: 1}}>
+                <Typography sx={{backgroundColor: '#ddd', borderRadius: '5px', px: 2, py: testCases?.[state.selected]?.user_output ? 0 : 1}}>
                     {testCases?.[state.selected]?.expected_output}
                 </Typography>
+                {testCases?.[state.selected]?.user_output 
+                ? (
+                    <>
+                        <Typography>
+                            User Output
+                        </Typography>
+                        <Typography sx={{backgroundColor: '#ddd', borderRadius: '5px', px: 2}}>
+                            {testCases?.[state.selected]?.user_output}
+                        </Typography>
+                    </>
+                ) : (
+                    <></>
+                )}
             </Stack>
         </Stack>
     )
