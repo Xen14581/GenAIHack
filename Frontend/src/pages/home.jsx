@@ -111,7 +111,7 @@ const HomePage = () => {
       </Stack>
       
       <Grid2 container columns={12} spacing={2} sx={{width: '100%', height: '50vh', display: 'flex', justifyContent: 'center'}}>
-        {topics?.map((topic, idx) => 
+        {topics && topics.map((topic, idx) => 
           <Grid2 item size={4} key={idx} sx={{height: '100%'}}>
             <DSACard
               topic={topic}
