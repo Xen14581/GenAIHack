@@ -46,3 +46,9 @@ a:active {
   text-decoration: underline;
 
 }
+
+/* CSS for calendar heatmap */
+.react-calendar-heatmap .color-scale-1 { fill: #84a2e6; }
+.react-calendar-heatmap .color-scale-2 { fill: #4378f3; }
+.react-calendar-heatmap .color-scale-3 { fill: #0039bd; }
+.react-calendar-heatmap .color-scale-4 { fill: #00113a; }
