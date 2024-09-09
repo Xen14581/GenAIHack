@@ -22,7 +22,14 @@ const Code = () => {
             }
         })
         let trigger = `Student Code:\n${code}\nTest Cases:\n\n${data.results.map(tcase => {
-            return ['Input:',String(tcase.input),'Output:',String(tcase.user_output) ,'Expected Output:',String(tcase.expected_output)].join("\n")
+            return [
+                'Input:', 
+                String(tcase.input), 
+                'Student Code Output:', 
+                String(tcase.user_output), 
+                'Expected Output:', 
+                String(tcase.expected_output)
+            ].join("\n")
         }).join("\n\n")}`
         localStorage.setItem("trigger", trigger)
     }

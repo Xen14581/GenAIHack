@@ -31,19 +31,13 @@ const ChatBox=()=>{
         let query = state.textValue ? state.textValue : message
         setState(prev => {
             return {
-                history: [...prev.history, {'role': 'user', 'parts': [prev.textValue ? prev.textValue : message]}],
+                history: [...prev.history, {'role': 'user', 'parts': [query]}, {'role': 'loading', 'parts': [""]}],
                 textValue: ''
             }
         })
         if (message !== '') {
             localStorage.removeItem('trigger')
         }
-        setState(prev => {
-            return {
-                ...prev,
-                history: [...prev.history, {'role': 'loading', 'parts': [""]}],
-            }
-        })
         await stream(user.token, selectedTopic.id, location === 'chat' ? 'module' : 'coding_round', query, setState)
         setState(prev => {
             let history = prev.history
@@ -72,7 +66,6 @@ const ChatBox=()=>{
                 data.push({"role": "model", "parts": [`Hello I'm Sage, your personal learning partner and teaching assistant! I can see that you've shown an interest in learning about **${selectedTopic.title}** today so let's get on with it, shall we? As an addition, you can select any of the topics in the panel on the side at any point you feel like learning something new!`]})
                 data = [...data.reverse()]
             }
-            console.log(data)
             setState(prev => {
                 return {
                     ...prev,

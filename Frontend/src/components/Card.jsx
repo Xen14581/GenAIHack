@@ -10,6 +10,8 @@ import {
 import { setTopic } from "../reducers/topicSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Markdown from "react-markdown";
+import remarkGfm from 'remark-gfm'
+import components from "./MarkdownComponents";
 
 const DSACard = ({ topic }) => {
   const user = useSelector(state => state.user.value)
@@ -41,9 +43,7 @@ const DSACard = ({ topic }) => {
         borderRadius: "10px",
       }}
     >
-      <CardContent
-        sx={{padding: "5" }}
-      >
+      <CardContent>
         <Typography
           variant="h4"
           sx={{
@@ -65,18 +65,18 @@ const DSACard = ({ topic }) => {
             color: "#006CB8",
             overflowWrap: "wrap",
             marginBottom: "2vh",
-            fontSize: 18
+            fontSize: window.innerWidth > 1000 ? 18 : 15
           }}
         >
-          <Markdown>
-          {"This module includes:\n1. Introduction to Stack\n2. Stack Operations\n3. Quiz\n4. Code"}
+          <Markdown remarkPlugins={[remarkGfm]} components={components}>
+            {content}
           </Markdown>
         </Typography>
       </CardContent>
-      <CardActions sx={{display: 'flex', justifyContent: 'center'}}>
+      <CardActions sx={{display: 'flex', justifyContent: 'center', p: 0}}>
         <Button
           variant="contained"
-          size="large"
+          size={window.innerWidth > 1000 ? "large" : 'small'}
           sx={{
             width: "90%",
             justifyContent: "start",

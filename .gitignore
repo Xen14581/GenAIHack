@@ -12,6 +12,7 @@ Frontend/node_modules
 
 # production
 /build
+build
 
 # IDEs and editors
 /.idea

@@ -162,13 +162,12 @@ const Navbar = (props) => {
                         <Grid2 
                             container 
                             sx={{
-                                minWidth: '90vw',
-                                maxWidth: '90vw', 
+                                minWidth: window.innerWidth > 1000 ? '90vw' : '100vw',
                                 bgcolor:'#002A47',
-                                borderRadius: "0 0 23px 23px",
+                                borderRadius: window.innerWidth > 1000 ? "0 0 23px 23px" : 0,
                                 display: 'flex',
                                 alignItems: 'center',
-                                p: 0,
+                                pl: window.innerWidth > 1000 ? 0 : 2,
                                 maxHeight: '8vh'
                             }}
                             columns={20}
@@ -206,7 +205,7 @@ const Navbar = (props) => {
 
                             {/* List or Menu */}
                             <Grid2 
-                                size={"grow"}
+                                size={window.innerWidth > 1000 ? "grow" : 10}
                                 sx={
                                 window.innerWidth > 1000 
                                 ? {height: '100%', 
@@ -269,103 +268,125 @@ const Navbar = (props) => {
                                             {item.name}
                                             </MenuItem>)
                                         })}
+                                        {
+                                        user ? <></> : 
+                                        <>
+                                            <Box sx={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+                                                <Divider sx={{backgroundColor: 'white', width: '90%'}} />
+                                            </Box>
+                                            <MenuItem 
+                                                onClick={() => {
+                                                    window.location.href = "/auth/signIn"    
+                                                }} 
+                                                disableRipple
+                                            >
+                                                Login / Register
+                                            </MenuItem>
+                                        </>
+                                        }
                                     </StyledMenu>
                                 </>                                     
                                 }
                             </Grid2>
 
                             {/* Avatar */}
-                            <Grid2 
-                                size={window.innerWidth > 1000 ? user ? 2 : 3 : user ? 3 : 4}
-                                sx={
-                                    window.innerWidth > 1000 
-                                    ? {
-                                        // width: '10%', 
-                                        height: '60%', display:'flex', justifyContent:'center'
-                                    } : {
-                                        // width: '15%', 
-                                        height: '60%', display:'flex', justifyContent:'flex-end', pr: 3
+                            {window.innerWidth > 1000 
+                            ?
+                                <Grid2 
+                                    size={window.innerWidth > 1000 ? user ? 2 : 3 : user ? 3 : 4}
+                                    sx={
+                                        window.innerWidth > 1000 
+                                        ? {
+                                            // width: '10%', 
+                                            height: '60%', display:'flex', justifyContent:'center'
+                                        } : {
+                                            // width: '15%', 
+                                            height: '60%', display:'flex', justifyContent:'flex-end', pr: 3
+                                        }
+                                    } 
+                                >
+                                    {user 
+                                    ?
+                                    <>
+                                        <IconButton
+                                            onClick={handleClick}
+                                            size="small"
+                                            // sx={{ ml: 2 }}
+                                            aria-controls={avatarMenuOpen ? 'account-menu' : undefined}
+                                            aria-haspopup="true"
+                                            aria-expanded={avatarMenuOpen ? 'true' : undefined}
+                                        >
+                                            <Avatar src="/broken-image.jpg" sx={window.innerWidth > 1000 ? { bgcolor: blue[600] , width: 35, height: 35} : { bgcolor: blue[600] , width: 30, height: 30}}/>
+                                        </IconButton>
+                                        <Menu
+                                            anchorEl={avatarEl}
+                                            id="account-menu"
+                                            open={avatarMenuOpen}
+                                            onClose={handleClose}
+                                            onClick={handleClose}
+                                            slotProps={{
+                                            paper: {
+                                                elevation: 0,
+                                                sx: {
+                                                overflow: 'visible',
+                                                filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                                                mt: 1.5,
+                                                '& .MuiAvatar-root': {
+                                                    width: 32,
+                                                    height: 32,
+                                                    ml: -0.5,
+                                                    mr: 1,
+                                                },
+                                                '&::before': {
+                                                    content: '""',
+                                                    display: 'block',
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    right: 14,
+                                                    width: 10,
+                                                    height: 10,
+                                                    bgcolor: 'background.paper',
+                                                    transform: 'translateY(-50%) rotate(45deg)',
+                                                    zIndex: 0,
+                                                },
+                                                },
+                                            },
+                                            }}
+                                            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                                            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                                        >
+                                            <MenuItem id="profile" onClick={handleClose}>
+                                                <Avatar /> Profile
+                                            </MenuItem>
+                                            <Divider />
+                                            <MenuItem id="logout" onClick={handleClose}>
+                                                <ListItemIcon>
+                                                    <Logout fontSize="small" />
+                                                </ListItemIcon>
+                                                Logout
+                                            </MenuItem>
+                                        </Menu>
+                                    </>
+                                    : 
+                                    <>
+                                        <Button
+                                            variant="outlined"
+                                            sx={{
+                                                backgroundColor: "white",
+                                                color: "#006CB8",
+                                                border: "1px solid #006CB8",
+                                                width: "80%",
+                                            }}
+                                            onClick={handleRedirect}
+                                            >
+                                            {"Login/Register"}
+                                        </Button>
+                                    </> 
                                     }
-                                } 
-                            >
-                                {user 
-                                ? 
-                                <>
-                                    <IconButton
-                                        onClick={handleClick}
-                                        size="small"
-                                        // sx={{ ml: 2 }}
-                                        aria-controls={avatarMenuOpen ? 'account-menu' : undefined}
-                                        aria-haspopup="true"
-                                        aria-expanded={avatarMenuOpen ? 'true' : undefined}
-                                    >
-                                        <Avatar src="/broken-image.jpg" sx={window.innerWidth > 1000 ? { bgcolor: blue[600] , width: 35, height: 35} : { bgcolor: blue[600] , width: 30, height: 30}}/>
-                                    </IconButton>
-                                    <Menu
-                                        anchorEl={avatarEl}
-                                        id="account-menu"
-                                        open={avatarMenuOpen}
-                                        onClose={handleClose}
-                                        onClick={handleClose}
-                                        slotProps={{
-                                        paper: {
-                                            elevation: 0,
-                                            sx: {
-                                            overflow: 'visible',
-                                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                                            mt: 1.5,
-                                            '& .MuiAvatar-root': {
-                                                width: 32,
-                                                height: 32,
-                                                ml: -0.5,
-                                                mr: 1,
-                                            },
-                                            '&::before': {
-                                                content: '""',
-                                                display: 'block',
-                                                position: 'absolute',
-                                                top: 0,
-                                                right: 14,
-                                                width: 10,
-                                                height: 10,
-                                                bgcolor: 'background.paper',
-                                                transform: 'translateY(-50%) rotate(45deg)',
-                                                zIndex: 0,
-                                            },
-                                            },
-                                        },
-                                        }}
-                                        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                                        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                                    >
-                                        <MenuItem id="profile" onClick={handleClose}>
-                                            <Avatar /> Profile
-                                        </MenuItem>
-                                        <Divider />
-                                        <MenuItem id="logout" onClick={handleClose}>
-                                            <ListItemIcon>
-                                                <Logout fontSize="small" />
-                                            </ListItemIcon>
-                                            Logout
-                                        </MenuItem>
-                                    </Menu>
-                                </> 
-                                :
-                                <>
-                                <Button
-                                    variant="outlined"
-                                    sx={{
-                                        backgroundColor: "white",
-                                        color: "#006CB8",
-                                        border: "1px solid #006CB8",
-                                        width: "80%",
-                                    }}
-                                    onClick={handleRedirect}
-                                    >
-                                    {"Login/Register"}
-                                </Button>
-                                </>}
-                            </Grid2>
+                                </Grid2> 
+                                : 
+                                <></>
+                            }
                         </Grid2>
                     </AppBar>
                 </Box>

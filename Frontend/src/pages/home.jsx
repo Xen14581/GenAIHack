@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useRef } from "react";
-import { Typography, Stack, Button, Divider, Grid2 } from "@mui/material";
+import { Typography, Stack, Button, Divider, Grid2, Box } from "@mui/material";
 import Infographic from "../assets/Infographic.png";
 import DSACard from "../components/Card";
 import { useSelector, useDispatch } from 'react-redux'
@@ -33,38 +33,45 @@ const HomePage = () => {
   }, [])
 
   return (
+    // Outer layer providing top and bottom padding
     <Stack
       spacing={8}
       direction="column"
       sx={{
         height: "min-content",
         width: "100%",
-        py: "7vh",
+        py: window.innerWidth > 1000 ? "7vh" : '5vh',
       }}
     >
+
+      {/* Infographic stack containing text and image */}
       <Stack
         spacing={2}
         width={"100%"}
-        direction="row"
+        direction={window.innerWidth > 1000 ? "row" : "column-reverse"}
         justifyContent={"center"}
         alignItems={"center"}
       >
-        <Stack spacing={3} direction="column" width={"50%"}>
-          <Typography variant="h3">
+        
+        {/* Text stack */}
+        <Stack spacing={3} direction="column" width={window.innerWidth > 1000 ? "50%" : "80%"}>
+          <Box sx={{display: 'flex', justifyContent: window.innerWidth > 1000 ? 'flex-start' : 'center', flexDirection: 'column'}}>
+          <Typography variant={window.innerWidth > 1000 ? "h3" : "h5"} sx={{textAlign: window.innerWidth > 1000 ? 'start' : 'center'}}>
             Discover Learning through{" "}
-            <span style={{ color: "#002A47" }}>SAGE.AI</span>
           </Typography>
-          <Typography variant="h5">
+          <span style={{ color: "#002A47", fontWeight: '600', fontSize: window.innerWidth > 1000 ? 40 : 40, textAlign: window.innerWidth > 1000 ? 'start' : 'center' }}>SAGE.AI</span>
+          </Box>
+          <Typography variant={window.innerWidth > 1000 ? "h5" : 'h6'} sx={{textAlign: window.innerWidth > 1000 ? 'start' : 'center'}}>
             Use the power of guided questioning to discover paradigms of DSA
             from within
           </Typography>
-          <Stack spacing={3} direction="row">
+          <Stack spacing={3} direction="row" sx={{display: 'flex', flexDirection: 'row', justifyContent: window.innerWidth > 1000 ? 'start' : 'center'}}>
             <Button
               variant="contained"
               sx={{
                 backgroundColor: "#006CB8",
                 border: "1px solid #006CB8",
-                width: "25%",
+                width: window.innerWidth > 1000 ? "25%" : '35%',
               }}
               onClick={handleScroll}
             >
@@ -76,7 +83,7 @@ const HomePage = () => {
                 backgroundColor: "white",
                 color: "#006CB8",
                 border: "1px solid #006CB8",
-                width: "25%",
+                width: window.innerWidth > 1000 ? "25%" : '35%',
               }}
               onClick={handleRedirect}
             >
@@ -84,7 +91,9 @@ const HomePage = () => {
             </Button>
           </Stack>
         </Stack>
-        <img src={Infographic} sx={{ width: "50%", height: "50%" }} />
+        
+        {/* Image */}
+        <img src={Infographic} style={{ width: window.innerWidth > 1000 ? "40%" : "90%", height: window.innerWidth > 1000 ? "40%" : "90%" }} />
       </Stack>
 
       <Divider />
@@ -99,20 +108,21 @@ const HomePage = () => {
         ref={topicsRef}
       >
         <Typography
-          variant="h2"
+          variant={window.innerWidth > 1000 ? "h4" : 'h4'}
           sx={{
             color: "#006CB8",
             fontWeight: "bold",
             fontFamily: "Montserrat",
+            textAlign: window.innerWidth > 1000 ? 'start' : 'center'
           }}
         >
-          DSA FUNDAMENTALS
+          Topics we will help you learn
         </Typography>
       </Stack>
       
       <Grid2 container columns={12} spacing={2} sx={{width: '100%', height: '50vh', display: 'flex', justifyContent: 'center'}}>
         {topics && topics.map((topic, idx) => 
-          <Grid2 item size={4} key={idx} sx={{height: '100%'}}>
+          <Grid2 item size={window.innerWidth > 1000 ? 4 : 8} key={idx} sx={{height: '100%'}}>
             <DSACard
               topic={topic}
             />
