@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import {getChatHistory, chat, stream} from "../apis/chat";
 import SendIcon from '@mui/icons-material/Send';
 
-const ChatBox=()=>{
+const ChatBox=({width, height})=>{
     const selectedTopic = useSelector(state => state.topic.selectedTopic)
     const user = useSelector(state => state.user.value)
 
@@ -85,7 +85,7 @@ const ChatBox=()=>{
             <Box sx={{mt: 3}}>
                 <StepperComponent />
             </Box>
-            <MessagePanel chatHistory={[...state.history].reverse()} />
+            <MessagePanel chatHistory={[...state.history].reverse()} width={width} height={height} />
             <Box sx={{width:'100%'}}>
                 <Stack spacing={2} direction="row">
                     <TextField

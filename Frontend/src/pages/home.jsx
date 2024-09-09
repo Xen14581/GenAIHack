@@ -120,7 +120,7 @@ const HomePage = () => {
         </Typography>
       </Stack>
       
-      <Grid2 container columns={12} spacing={2} sx={{width: '100%', height: '50vh', display: 'flex', justifyContent: 'center'}}>
+      <Grid2 container columns={12} spacing={2} sx={{width: '100%', height: window.innerWidth > 1000 ? '50vh' : 'min-content', display: 'flex', justifyContent: 'center'}}>
         {topics && topics.map((topic, idx) => 
           <Grid2 item size={window.innerWidth > 1000 ? 4 : 8} key={idx} sx={{height: '100%'}}>
             <DSACard

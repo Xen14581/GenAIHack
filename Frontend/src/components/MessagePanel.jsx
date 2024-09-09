@@ -2,7 +2,7 @@ import Message from "./Message";
 import { Box } from "@mui/material";
 import {ReactComponent as InvertedLogo} from "../assets/Logo-rev.svg"
 
-const MessagePanel = ({ chatHistory }) => {
+const MessagePanel = ({ chatHistory, width, height }) => {
     return (
         <Box sx={{
             display: 'flex', 
@@ -32,7 +32,7 @@ const MessagePanel = ({ chatHistory }) => {
             {/* Chats */}
             <Box sx={{width: '100%', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column-reverse', overflowX: 'hidden'}}>
                 {chatHistory?.map((message, index) => {
-                    return <Message key={index} role={message.role} messages={message.parts} /> 
+                    return <Message key={index} role={message.role} messages={message.parts} width={width} height={height} /> 
                 })}
             </Box>
         </Box>

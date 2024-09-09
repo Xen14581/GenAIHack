@@ -255,7 +255,7 @@ const Navbar = (props) => {
                                         onClick={handleOpenClose}
                                         sx={{ color: "#ffffff"}}
                                     >
-                                        {window.innerWidth > 500 ? "Options" : <MenuIcon sx = {{fontSize: "40px"}}/>}
+                                        <MenuIcon sx={{fontSize: "40px"}}/>
                                     </Button>
                                     <StyledMenu
                                         id="demo-customized-menu"

@@ -13,10 +13,10 @@ const LearnLayout = () => {
     })
     return (
         <>
-            <Box sx={{ height: window.innerWidth > 1000 ? '100%' : '10vh', width: window.innerWidth > 1000 ? '25%' : '100%' }}>
+            <Box sx={{ height: window.innerWidth > 1000 ? '100%' : '10vh', width: window.innerWidth > 1000 ? 'min-content' : '100%' }}>
                 <SideBar />
             </Box>
-            <Box sx={{ height: window.innerWidth > 1000 ? '100%' : '80vh', width: window.innerWidth > 1000 ? '75%' : '100%' }}>
+            <Box sx={{ height: window.innerWidth > 1000 ? '100%' : '80vh', width: '100%' }}>
                 <Outlet />
             </Box>
         </>

@@ -62,7 +62,7 @@ const Code = () => {
                         </Stack>
                     </Grid>
                     <Grid size={3} sx={{ border: 1, borderColor: '#aaa', borderWidth: '1px', borderRadius: '12px' }}>
-                        <ChatBox />
+                        <ChatBox width={window.innerWidth * 0.25} height={window.innerHeight} />
                     </Grid>
                 </Grid>
             }
