@@ -1,3 +1,4 @@
+from unittest import result
 from flask import Blueprint, request, jsonify, current_app
 from models import (
     db,
@@ -80,22 +81,24 @@ def test_coding_round(user_id, module_id):
     if coding_round is None:
         return jsonify({"message": "Coding round not found"}), 404
 
-    lambda_payload = {
-        "language": "python",
-        "code": code,
-        "inputs": "\n".join([str(param) for param in input_params]) + "\n",
-    }
+    # lambda_payload = {
+    #     "language": "python",
+    #     "code": code,
+    #     "inputs": "\n".join([str(param) for param in input_params]) + "\n",
+    # }
     try:
-        response = requests.post(
-            current_app.config["LAMBDA_FUNCTION_API_URL"],
-            data=json.dumps(lambda_payload),
-            headers={"Content-Type": "application/json"},
-        )
-        lambda_response = response.json()
+    #     response = requests.post(
+    #         current_app.config["LAMBDA_FUNCTION_API_URL"],
+    #         data=json.dumps(lambda_payload),
+    #         headers={"Content-Type": "application/json"},
+    #     )
+    #     lambda_response = response.json()
 
+        data = execute_code(code=code, input_params="\n".join([str(param) for param in input_params]) + "\n")
+        return jsonify(data), 200
     except requests.RequestException as e:
         return jsonify({"error": str(e)}), 500
-    return jsonify(lambda_response)
+    # return jsonify(lambda_response)
 
 
 # @coding_round_blueprint.route(
@@ -144,6 +147,7 @@ def test_coding_round(user_id, module_id):
 def evaluate_coding_round(user_id, module_id):
     data = request.json
     code = data.get("code")
+    print(code)
     module = ModuleSchema.query.get(module_id)
 
     if not module:
@@ -157,12 +161,12 @@ def evaluate_coding_round(user_id, module_id):
     test_cases_list = [
         {
             "id": tc.id,
-            "input": json.loads(tc.input_params),
+            "input": "\n".join([str(param) for param in list(json.loads(tc.input_params))]) + "\n",
             "expected_output": tc.expected_output,
         }
         for tc in test_cases
     ]
-
+    print(test_cases_list)
     # Initialize the score
     score = 0
     total_test_cases = len(test_cases_list)
@@ -174,7 +178,7 @@ def evaluate_coding_round(user_id, module_id):
     if not module_evaluation:
         
         coding_round_count, quiz_question_count = get_module_counts(
-                module_id=data["module_id"]
+                module_id=module_id
             )
         module_evaluation = ModuleEvaluationResult(
             user_id=user_id,

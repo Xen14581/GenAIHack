@@ -5,6 +5,7 @@ from middleware.auth_middleware import token_required
 from models import db, ModuleSchema, CodingRound, TestCase, Quiz, Question
 import json
 from google.generativeai import GenerativeModel
+from utils.modules import visualize_traversals
 
 module_blueprint = Blueprint("module", __name__)
 
@@ -25,7 +26,9 @@ def list_quiz():
     module_list = []
     for module in modules:
         # quiz = Quiz.query.get(module.quiz_id)
-        module_list.append({"id": module.id, "title": module.title, "description": module.description})
+        module_list.append(
+            {"id": module.id, "title": module.title, "description": module.description}
+        )
 
     return jsonify(module_list), 200
 
@@ -91,11 +94,26 @@ def create_module(user_id):
         )
         db.session.add(new_module)
         db.session.commit()
-        
-        current_app.config.setdefault(f"module_{str(new_module.id)}_model", GenerativeModel("gemini-1.5-flash", system_instruction=new_module.prompt))
-        current_app.config.setdefault(f"coding_round_{str(new_module.id)}_model", GenerativeModel("gemini-1.5-flash", system_instruction=new_coding_round.prompt))
 
-        return jsonify({"message": f"Module created successfully ModuleID: {new_module.id}, CodingRoundID: {coding_round_id}"}), 201
+        current_app.config.setdefault(
+            f"module_{str(new_module.id)}_model",
+            GenerativeModel("gemini-1.5-flash", system_instruction=new_module.prompt),
+        )
+        current_app.config.setdefault(
+            f"coding_round_{str(new_module.id)}_model",
+            GenerativeModel(
+                "gemini-1.5-flash", system_instruction=new_coding_round.prompt
+            ),
+        )
+
+        return (
+            jsonify(
+                {
+                    "message": f"Module created successfully ModuleID: {new_module.id}, CodingRoundID: {coding_round_id}"
+                }
+            ),
+            201,
+        )
     else:
         return jsonify({"message": "Failed to create module"}), 400
 
@@ -156,7 +174,32 @@ def get_module(user_id, module_id):
         "quiz": quiz_data,
         "prompt": module.prompt,
         "coding_round": coding_round_data,
-        "description": module.description
+        "description": module.description,
     }
 
     return jsonify(module_data), 200
+
+
+@module_blueprint.route(
+    "/<int:module_id>/prompt", methods=["POST"], endpoint="change_prompt"
+)
+@token_required
+def change_prompt(user_id, module_id):
+    print("here")
+    data = request.json
+    module = ModuleSchema.query.get(module_id)
+    if not module:
+        return jsonify({"message": "Module not found"}), 404
+
+    module.prompt = data["prompt"]
+    db.session.commit()
+    current_app.config.pop(f"module_{str(module_id)}_model")
+    current_app.config.setdefault(
+        f"module_{str(module_id)}_model",
+        GenerativeModel(
+            "gemini-1.5-flash",
+            system_instruction=data["prompt"],
+            tools=[visualize_traversals],
+        ),
+    )
+    return jsonify({"message": "Done"}), 200

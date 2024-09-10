@@ -8,7 +8,7 @@ from config import Config
 from models import db, ModuleSchema, CodingRound
 from api import main_blueprint
 from google.generativeai import GenerativeModel
-
+from utils.modules import init_modules
 
 def create_app():
     app = Flask(__name__)
@@ -19,21 +19,7 @@ def create_app():
 
     with app.app_context():
         db.create_all()
-        modules = ModuleSchema.query.all()
-        for module in modules:
-            coding_round = CodingRound.query.filter_by(
-                id=module.coding_round_id
-            ).first()
-            app.config.setdefault(
-                f"module_{str(module.id)}_model",
-                GenerativeModel("gemini-1.5-flash", system_instruction=module.prompt),
-            )
-            app.config.setdefault(
-                f"coding_round_{str(module.id)}_model",
-                GenerativeModel(
-                    "gemini-1.5-flash", system_instruction=coding_round.prompt
-                ),
-            )
+        init_modules()
 
     app.register_blueprint(main_blueprint)
 
