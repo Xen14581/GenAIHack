@@ -27,7 +27,7 @@ const MessagePanel = ({ chatHistory, width, height }) => {
                     zIndex: -2
                 }}
             >
-                <InvertedLogo width="30%" height="30%" opacity="0.045" />
+                <InvertedLogo width="40%" height="40%" opacity="0.045" />
             </Box>
             {/* Chats */}
             <Box sx={{width: '100%', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column-reverse', overflowX: 'hidden'}}>

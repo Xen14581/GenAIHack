@@ -13,7 +13,7 @@ export const topicSlice = createSlice({
     },
     setAllTopics: (state, action) => {
       state.topics = action.payload
-      state.selectedTopic = state.selectedTopic ? state.selectedTopic : action.payload[0]
+      state.selectedTopic = action.payload[0]
       localStorage.setItem("selectedTopic", JSON.stringify(state.selectedTopic))
       localStorage.setItem("topics", JSON.stringify(state.topics))
     }

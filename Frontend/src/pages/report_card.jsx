@@ -14,6 +14,8 @@ import { useSelector } from 'react-redux';
 
 const ReportCard=()=>{
 
+    document.title = "Analytics"
+
     const [userObj, setObj] = React.useState({})
     const [state, setState] = React.useState({
         distinctConsistencyYears: [],
@@ -25,6 +27,9 @@ const ReportCard=()=>{
     const user = useSelector(state => state.user.value)
 
     React.useLayoutEffect(() => {
+        if (!user) {
+            window.location.href = "/auth/signIn"
+        }
         const getdata = async () => {
             const data = await getAnalytics(user.token)
             setObj(data)

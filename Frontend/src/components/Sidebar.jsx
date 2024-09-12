@@ -19,12 +19,12 @@ const SideBar=()=>{
     }
 
     return(
-        <Box sx={{height: '100%' }}>
+        <Box sx={{height: '100%', py: window.innerWidth > 1000 ? 3 : 0}}>
             <CssBaseline />
             {window.innerWidth > 1000 ? 
                 <Paper 
                     sx={{
-                        width: '20vw', 
+                        width: '17vw', 
                         height: '100%', 
                         overflowY:"auto",  
                         paddingLeft: "2vw",
@@ -55,7 +55,8 @@ const SideBar=()=>{
                             ))
                         }
                     </List>
-                </Paper>: 
+                </Paper>
+                : 
                 <Box 
                     sx={{
                         minWidth: '80vw', 
@@ -70,22 +71,23 @@ const SideBar=()=>{
                     displayEmpty
                     variant="standard"
                     value={selectedTopic.title}
-                    onChange={(event)=>handleSelectTopic(event.target.value)}
+                    // onChange={(e)=>handleSelectTopic(e.target.value)}
                     input={<OutlinedInput />}
                     inputProps={{ 'aria-label': 'Without label' }}
                     >
-                    <MenuItem disabled value="">
-                        <em>Select a Topic</em>
-                    </MenuItem>
-                    {topics.map((topic, index) => (
-                        <MenuItem
-                            key={index}
-                            value={topic.title}
-                        >
-                            {topic.title}
+                        <MenuItem disabled value="">
+                            <em>Select a Topic</em>
                         </MenuItem>
-                    ))}
-                    </Select>
+                        {topics.map((topic, index) => (
+                            <MenuItem
+                                key={index}
+                                value={topic.title}
+                                onClick={() => handleSelectTopic(topic)}
+                            >
+                                {topic.title}
+                            </MenuItem>
+                        ))}
+                        </Select>
                 </FormControl>
             </Box>
             }

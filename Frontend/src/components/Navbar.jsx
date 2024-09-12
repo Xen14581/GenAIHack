@@ -142,7 +142,7 @@ const Navbar = (props) => {
     return (
         <Box 
             sx={{ 
-                height: '100vh', overflow: location === "/home" ? 'auto' : 'hidden' , px: window.innerWidth > 1000 ? '5rem' : 0
+                height: '100vh', overflow: location === "/home" ? 'auto' : 'hidden' , px: window.innerWidth > 1000 ? window.location.pathname !== "/learn/code" ? '5rem' : '2rem' : 0
             }}
         >
             <CssBaseline />
@@ -162,9 +162,9 @@ const Navbar = (props) => {
                         <Grid2 
                             container 
                             sx={{
-                                minWidth: window.innerWidth > 1000 ? '90vw' : '100vw',
+                                minWidth: window.innerWidth > 1000 ? window.location.pathname !== "/learn/code" ? '90vw' : '100vw' : '100vw',
                                 bgcolor:'#002A47',
-                                borderRadius: window.innerWidth > 1000 ? "0 0 23px 23px" : 0,
+                                borderRadius: window.innerWidth > 1000 ? window.location.pathname !== "/learn/code" ? "0 0 23px 23px" : 0 : 0,
                                 display: 'flex',
                                 alignItems: 'center',
                                 pl: window.innerWidth > 1000 ? 0 : 2,
@@ -269,7 +269,21 @@ const Navbar = (props) => {
                                             </MenuItem>)
                                         })}
                                         {
-                                        user ? <></> : 
+                                        user 
+                                        ? 
+                                        <>
+                                            <Box sx={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+                                                <Divider sx={{backgroundColor: 'white', width: '90%'}} />
+                                            </Box>
+                                            <MenuItem 
+                                                id="logout"
+                                                onClick={handleClose}
+                                                disableRipple
+                                            >
+                                                Logout
+                                            </MenuItem>
+                                        </> 
+                                        : 
                                         <>
                                             <Box sx={{width: '100%', display: 'flex', justifyContent: 'center'}}>
                                                 <Divider sx={{backgroundColor: 'white', width: '90%'}} />

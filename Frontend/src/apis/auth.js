@@ -1,23 +1,29 @@
 import apiUrl from "./baseurl";
 import axios from "axios"
-
+import { toast } from 'react-toastify';
 
 const login = async (data) => {
-    let response = await axios.post(apiUrl + "/auth/login", data=data)
-    if(response.status === 200) {
+    return await axios.post(apiUrl + "/auth/login", data=data)
+    .then(response => {
         return response.data
-    } else {
-        return {"Error": "Invalid credentials"}
-    }
+    })
+    .catch(err => {
+        console.error(err)
+        toast.error(err.response.data.message)
+        return {Error: err}
+    })
 }
 
 const register = async (data) => {
-    let response = await axios.post(apiUrl + "/auth/register", data=data)
-    if(response.status === 200) {
+    return await axios.post(apiUrl + "/auth/register", data=data)
+    .then(response => {
         return response.data
-    } else {
-        return {"Error": "Invalid credentials"}
-    }
+    })
+    .catch(err => {
+        console.error(err)
+        toast.error(err.response.data.message)
+        return {Error: err}
+    })
 }
 
 export { login, register };

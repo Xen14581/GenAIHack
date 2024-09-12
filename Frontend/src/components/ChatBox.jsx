@@ -5,6 +5,7 @@ import StepperComponent from "./Stepper";
 import { useSelector } from 'react-redux'
 import {getChatHistory, chat, stream} from "../apis/chat";
 import SendIcon from '@mui/icons-material/Send';
+import ChatInput from "./ChatInput";
 
 const ChatBox=({width, height})=>{
     const selectedTopic = useSelector(state => state.topic.selectedTopic)
@@ -12,17 +13,10 @@ const ChatBox=({width, height})=>{
 
     const [state, setState] = useState({
         history: [],
-        textValue: ''
+        textValue: '',
+        audioOpen: false,
+        audio: null
     })
-    
-    const handleInputChange = (e) => {
-        setState(prev => {
-            return {
-                ...prev,
-                textValue: e.target.value
-            }
-        })
-    }
 
     const handleSubmit = async (message = '') => {
         if(message === '' && !state.textValue) {
@@ -49,12 +43,6 @@ const ChatBox=({width, height})=>{
         })
     }
 
-    const handleEnter = (e) => {
-        if (e.key === 'Enter') {
-            handleSubmit()
-        }
-    }
-
     let location = window.location.pathname.split("/")
     location = location[location.length - 1]
 
@@ -72,13 +60,19 @@ const ChatBox=({width, height})=>{
                     history: data
                 }
             })
+        }
+        getdata()
+    }, [selectedTopic]) 
+
+    useEffect(() => {
+        const getdata = async () => {
             let trigger = localStorage.getItem('trigger')
             if (trigger) {
                 await handleSubmit(trigger)
             }
         }
         getdata()
-    }, [selectedTopic, localStorage.getItem("trigger")]) 
+    }, [localStorage.getItem("trigger")])
 
     return(
         <Box sx={{display: 'flex', flexDirection: 'column', width: '100%', height: '100%', px: 4, py: 1, maxHeight: '90vh' }}>
@@ -86,33 +80,7 @@ const ChatBox=({width, height})=>{
                 <StepperComponent />
             </Box>
             <MessagePanel chatHistory={[...state.history].reverse()} width={width} height={height} />
-            <Box sx={{width:'100%'}}>
-                <Stack spacing={2} direction="row">
-                    <TextField
-                        label="Message SAGE.AI"
-                        sx={{ width: "100%" }}
-                        value={state.textValue}
-                        onChange={handleInputChange}
-                        onKeyDown={handleEnter}
-                        slotProps={{
-                            input: {
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton onClick={handleSubmit}>
-                                        {/* <img
-                                        src={arrow}
-                                        style={{ width: 30, height: 30 }}
-                                        onClick={handleSubmit}
-                                        /> */}
-                                        <SendIcon />
-                                    </IconButton>
-                                </InputAdornment>
-                            ),
-                            },
-                        }}
-                    />
-                </Stack>
-            </Box>
+            <ChatInput state={state} setState={setState} handleSubmitChat={handleSubmit} />
         </Box>
     )
 }

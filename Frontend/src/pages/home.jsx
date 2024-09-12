@@ -7,6 +7,8 @@ import { setAllTopics } from "../reducers/topicSlice";
 import { getTopics } from "../apis/topics";
 
 const HomePage = () => {
+  document.title = "Sage.AI | Home"
+
   const user = useSelector(state => state.user.value)
   const topics = useSelector(state => state.topic.topics)
   const dispatch = useDispatch()

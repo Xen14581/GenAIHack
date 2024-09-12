@@ -50,6 +50,8 @@ const Card = styled(MuiCard)(({ theme }) => ({
   }));
 
 const SignUp = () => {
+    document.title = "Sage.AI | Regsiter"
+
     const [emailError, setEmailError] = React.useState(false);
     const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
     const [passwordError, setPasswordError] = React.useState(false);
@@ -129,7 +131,7 @@ const SignUp = () => {
               variant="h4"
               sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
             >
-              Sign Up
+              Register
             </Typography>
             <Box
               component="form"
@@ -222,7 +224,7 @@ const SignUp = () => {
                     variant="body2"
                     sx={{ alignSelf: 'center' }}
                   >
-                    Sign in
+                    Login
                   </Link>
                 </span>
               </Typography>

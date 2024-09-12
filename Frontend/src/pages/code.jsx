@@ -8,6 +8,8 @@ import { getCode, evaluateCode } from '../apis/code';
 import { useSelector } from 'react-redux';
 
 const Code = () => {
+    document.title = "Lean | Code"
+
     const [problem, setProblem] = useState({})
     const selectedTopic = useSelector(state => state.topic.selectedTopic)
     const user = useSelector(state => state.user.value)
@@ -35,14 +37,15 @@ const Code = () => {
     }
 
     useLayoutEffect(() => {
+        if (!user) {
+            window.location.href = "/auth/signIn"
+        }
         const getdata = async () => {
             const data = await getCode(user.token, selectedTopic.id)
             setProblem(data)
         }
         getdata()
     }, [])
-
-    console.log(problem.test_cases)
 
     return (
         <>
@@ -51,7 +54,7 @@ const Code = () => {
                     <Grid size={3} sx={{ border: 1, borderColor: '#aaa', borderWidth: '1px', borderRadius: '12px' }}>
                         <ProblemPanel problemStatement={problem.programming_question} />
                     </Grid>
-                    <Grid size={6}>
+                    <Grid size={5}>
                         <Stack style={{ height: '100%'}} spacing={1}>
                             <Box sx={{ height: '60%', width: '100%'}}>
                                 <CodeEditor codeTemplate={problem.template_code} onSubmit={submitCode} />
@@ -61,7 +64,7 @@ const Code = () => {
                             </Box>
                         </Stack>
                     </Grid>
-                    <Grid size={3} sx={{ border: 1, borderColor: '#aaa', borderWidth: '1px', borderRadius: '12px' }}>
+                    <Grid size={4} sx={{ border: 1, borderColor: '#aaa', borderWidth: '1px', borderRadius: '12px' }}>
                         <ChatBox width={window.innerWidth * 0.25} height={window.innerHeight} />
                     </Grid>
                 </Grid>

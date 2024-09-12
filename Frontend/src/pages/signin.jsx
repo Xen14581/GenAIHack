@@ -50,6 +50,9 @@ const Card = styled(MuiCard)(({ theme }) => ({
   }));
 
 const SignIn = () => {
+
+    document.title = "Sage.AI | Login"
+
     const [emailError, setEmailError] = React.useState(false);
     const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
     const [passwordError, setPasswordError] = React.useState(false);
@@ -118,7 +121,7 @@ const SignIn = () => {
               variant="h4"
               sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
             >
-              Sign in
+              Login
             </Typography>
             <Box
               component="form"
@@ -176,10 +179,10 @@ const SignIn = () => {
                   color={passwordError ? 'error' : 'primary'}
                 />
               </FormControl>
-              <FormControlLabel
+              {/* <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
-              />
+              /> */}
               <ForgotPassword open={open} handleClose={handleClose} />
               <Button
                 type="submit"
@@ -187,7 +190,7 @@ const SignIn = () => {
                 variant="contained"
                 onClick={validateInputs}
               >
-                Sign in
+                Login
               </Button>
               <Typography sx={{ textAlign: 'center' }}>
                 Don&apos;t have an account?{' '}
@@ -197,7 +200,7 @@ const SignIn = () => {
                     variant="body2"
                     sx={{ alignSelf: 'center' }}
                   >
-                    Sign up
+                    Register
                   </Link>
                 </span>
               </Typography>

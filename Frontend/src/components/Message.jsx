@@ -36,16 +36,16 @@ const Message = ({role, messages, width, height}) =>{
                         )
                     } else {
                         return (
-                            <>
-                            <Box sx={{minWidth: width > 1000 ? '8%' : width * 0.1, display: 'flex', justifyContent: 'center', mt: window.innerWidth > 1000 ? '0.8em' : '0.5vh'}}>
-                                {role === "user" ? <Avatar src="/broken-image.jpg" sx={width > 1000 ? { bgcolor: blue[600] , width: '28px', height: '28px'} : { bgcolor: blue[600] , width: 30, height: 30}}/> : role === 'loading' ? <Loader logoHeight="28px" logoWidth="28px" inverted /> : <InvertedLogo width={"28px"} height={"28px"} />}
+                            <Box key={index}>
+                                <Box sx={{minWidth: width > 1000 ? '8%' : width * 0.1, display: 'flex', justifyContent: 'center', mt: window.innerWidth > 1000 ? '0.8em' : '0.5vh'}}>
+                                    {role === "user" ? <Avatar src="/broken-image.jpg" sx={width > 1000 ? { bgcolor: blue[600] , width: '28px', height: '28px'} : { bgcolor: blue[600] , width: 30, height: 30}}/> : role === 'loading' ? <Loader logoHeight="28px" logoWidth="28px" inverted /> : <InvertedLogo width={"28px"} height={"28px"} />}
+                                </Box>
+                                <Typography variant="p" sx={{width: '90%'}} >
+                                    <Markdown remarkPlugins={[remarkGfm]} components={components} key={index} style={{overflowWrap: 'break-word', width: '100%'}}>
+                                        {message}
+                                    </Markdown>
+                                </Typography> 
                             </Box>
-                            <Typography variant="p" >
-                                <Markdown remarkPlugins={[remarkGfm]} components={components} key={index}>
-                                    {message}
-                                </Markdown>
-                            </Typography> 
-                            </>
                         )
                     }
                  })}

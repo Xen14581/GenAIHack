@@ -2,41 +2,25 @@ import apiUrl from "./baseurl";
 import axios from "axios"
 
 const getChatHistory = async (token, topic_id, type) => {
-    const response = await axios.post(apiUrl + "/chat/history", {"module_id": topic_id, "type": type}, {headers: {Authorization: token}})
-    if (response.status === 200) {
+    return await axios.post(
+        apiUrl + "/chat/history", 
+        {"module_id": topic_id, "type": type}, 
+        {headers: {Authorization: token}}
+    ).then(response => {
         return response.data.result
-    }
-    // if (type === "course") {
-    //     return [
-    //         {'role': 'user', 'parts': 'Hello'},
-    //         {'role': 'model', 'parts': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
-    //         {'role': 'user', 'parts': 'Hello'},
-    //         {'role': 'model', 'parts': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
-    //         {'role': 'user', 'parts': 'Hello'},
-    //         {'role': 'model', 'parts': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
-    //         {'role': 'user', 'parts': 'Hello'},
-    //         {'role': 'model', 'parts': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
-    //         {'role': 'user', 'parts': 'Hello'},
-    //         {'role': 'model', 'parts': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
-    //         {'role': 'user', 'parts': 'Hello'},
-    //         {'role': 'model', 'parts': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
-    //         {'role': 'user', 'parts': 'Hello'},
-    //         {'role': 'model', 'parts': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
-    //         {'role': 'user', 'parts': 'Hello'},
-    //         {'role': 'model', 'parts': `hi Warning: The property was originally a nonstandard and unprefixed Microsoft extension called word-wrap, and was implemented by most browsers with the same name. It has since been renamed to overflow-wrap, with word-wrap being an alias.`},
-    //     ]
-    // } else {
-    //     return [
-    //         {'role': 'user', parts: "Code Chat"},
-    //         {'role': 'model', parts: "Code Response"}
-    //     ]
-    // }
+    }).catch(() => {
+        localStorage.removeItem("user")
+        window.location.href = "/auth/signIn"
+    });
 }
 
 const chat = async (token, topic_id, type, message) => {
     const response = await axios.post(apiUrl + "/chat/", {module_id: topic_id, type: type, message: message}, {headers: {Authorization: token}})
     if (response.status === 200) {
         return response.data.result
+    } else {
+        localStorage.removeItem("user")
+        window.location.href = "/auth/signIn"
     }
 }
 

@@ -37,11 +37,19 @@ const components = {
     // },
     p(props) {
       const {node, ...rest} = props
-      return <p style={{marginTop: window.innerWidth > 1000 ? '' : '0.5vh', marginBottom: window.innerWidth > 1000 ? '' : '0.5vh'}} {...rest} />
+      return <p style={{marginTop: window.innerWidth > 1000 ? '' : '0.5vh', marginBottom: window.innerWidth > 1000 ? '' : '0.5vh', overflowWrap: 'break-word', width: '90%'}} {...rest} />
     },
     ol(props) {
       const {node, ...rest} = props
-      return <ol style={{marginTop: window.innerWidth > 1000 ? '' : '0.5vh', marginBottom: window.innerWidth > 1000 ? '' : '0.5vh'}} {...rest} />
+      return <ol style={{marginTop: window.innerWidth > 1000 ? '' : '0.5vh', marginBottom: window.innerWidth > 1000 ? '' : '0.5vh', overflowWrap: 'break-word',}} {...rest} />
+    },
+    pre(props) {
+      const {node, ...rest} = props
+      return <pre style={{marginTop: window.innerWidth > 1000 ? '' : '0.5vh', marginBottom: window.innerWidth > 1000 ? '' : '0.5vh', whiteSpace: 'pre-wrap', wordWrap: 'break-word', width: '92%'}} {...rest} />
+    },
+    code(props) {
+        const {node, ...rest} = props
+        return <code style={{overflowWrap: 'break-word', maxWidth: 'min-content'}} {...rest} />
     },
   }
 

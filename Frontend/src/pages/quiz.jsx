@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useLayoutEffect, useRef } from 'react';
 import { Grid2 } from "@mui/material";
 import {ReactComponent as Lock} from "../assets/quiz/locked.svg";
 import Button from '@mui/material/Button';
@@ -6,7 +6,9 @@ import { useSelector } from 'react-redux'
 import {getQuiz, evaluateQuiz} from '../apis/quiz';
 import StepperComponent from '../components/Stepper';
 
-const Quiz=()=>{       
+const Quiz=()=>{    
+  document.title = "Learn | Quiz"
+ 
   const selectedTopic = useSelector(state => state.topic.selectedTopic)
   const user = useSelector(state => state.user.value)
   const scroll = useRef(null)
@@ -46,7 +48,7 @@ const Quiz=()=>{
     })
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const getdata = async () => {
       let data = await getQuiz(user.token, selectedTopic.id)
       setQuiz(data)
