@@ -1,41 +1,24 @@
 import axios from "axios"
 import apiUrl from "./baseurl"
+import { toast } from 'react-toastify';
 
 const getTopics = async () => {
-    let response = await axios.get(apiUrl + "/module/list")
-    if (response.status === 200) {
+    // let response = await axios.get(apiUrl + "/module/list")
+    // if (response.status === 200) {
+    //     return response.data
+    // }
+
+    return await axios.get(apiUrl + "/module/list")
+    .then(response => {
         return response.data
-    }
-    // return [
-    //     {
-    //         "id": 1,
-    //         "title": "Python Basics"
-    //     },
-    //     {
-    //         "id": 2,
-    //         "title": "Data Structures"
-    //     },
-    //     {
-    //         "id": 3,
-    //         "title": "Algorithms"
-    //     },
-    //     {
-    //         "id": 4,
-    //         "title": "Stacks"
-    //     },
-    //     {
-    //         "id": 5,
-    //         "title": "Queues"
-    //     },
-    //     {
-    //         "id": 6,
-    //         "title": "Arrays"
-    //     },
-    //     {
-    //         "id": 7,
-    //         "title": "Trees"
-    //     },
-    // ]
+    })
+    .catch(err => {
+        console.error(err)
+        toast.error(err.response.data.message)
+        // return {Error: err}
+        // localStorage.removeItem("user")
+        // window.location.href = "/home"
+    })
 }
 
 export { getTopics };

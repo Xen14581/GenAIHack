@@ -42,6 +42,8 @@ const ReportCard=()=>{
             })
             setYearConsistency(dyears[0])
             setList(filterByYear(data?.logins, dyears[0]))
+            setTopic(Object.keys(data.scores)[0])
+            setTopicMetadata(data.scores[Object.keys(data.scores)[0]])
         }
         getdata()
     }, [])

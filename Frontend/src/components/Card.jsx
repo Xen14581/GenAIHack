@@ -38,12 +38,12 @@ const DSACard = ({ topic }) => {
         justifyContent: 'space-between',
         p: 2,
         width: "100%",
-        height: "min-content",
+        height: "50vh",
         border: "1px solid black",
         borderRadius: "10px",
       }}
     >
-      <CardContent>
+      <CardContent sx={{maxHeight: '80%'}}>
         <Typography
           variant="h4"
           sx={{
@@ -65,7 +65,8 @@ const DSACard = ({ topic }) => {
             color: "#006CB8",
             overflowWrap: "wrap",
             marginBottom: "2vh",
-            fontSize: window.innerWidth > 1000 ? 18 : 15
+            fontSize: window.innerWidth > 1000 ? 18 : 15,
+            overflowY: 'auto'
           }}
         >
           <Markdown remarkPlugins={[remarkGfm]} components={components}>

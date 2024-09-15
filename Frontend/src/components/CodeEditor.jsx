@@ -43,12 +43,14 @@ const CodeEditor = ({ codeTemplate, onSubmit }) => {
     }
 
     const handleCodeChange = (value) => {
-        setState(prev => {
-            return {
-                ...prev,
-                code: value
-            }
-        })
+        if (![].includes(state.cursorPosition[0])) {
+            setState(prev => {
+                return {
+                    ...prev,
+                    code: value
+                }
+            })
+        }
     }
 
     return (
@@ -85,6 +87,7 @@ const CodeEditor = ({ codeTemplate, onSubmit }) => {
                 theme={'vs-light'}
                 onMount={handleEditorDidMount}
                 onChange={handleCodeChange}
+                options={{readOnly: [].includes(state.cursorPosition[0])}}
             />
             <Typography component="span" sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, backgroundColor: '#ddd', borderRadius: '0 0 12px 12px'}}>
                 {`Line: ${state.cursorPosition[0]}, Column: ${state.cursorPosition[1]}`}

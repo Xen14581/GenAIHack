@@ -1,18 +1,34 @@
 import apiUrl from "./baseurl";
 import axios from "axios";
+import { toast } from 'react-toastify';
 
 const getQuiz = async (token, topic_id) => {
-    const response = await axios.get(apiUrl + "/module/" + topic_id + "/quiz/", {headers: {Authorization: token}})
-    if (response.status === 200) {
+
+    return await axios.get(apiUrl + "/module/" + topic_id + "/quiz/", {headers: {Authorization: token}})
+    .then(response => {
         return response.data
-    }
+    })
+    .catch(err => {
+        console.error(err)
+        toast.error(err.response.data.message)
+        localStorage.removeItem("user")
+        window.location.href = "/home"
+    })
 }
 
 const evaluateQuiz = async(token, topic_id, answers) => {
-    const response = await axios.post(apiUrl + "/module/" + topic_id + "/quiz/evaluate", answers, {headers: {Authorization: token}})
-    if (response.status === 200) {
+
+    return await axios.post(apiUrl + "/module/" + topic_id + "/quiz/evaluate", answers, {headers: {Authorization: token}})
+    .then(response => {
         return response.data
-    }
+    })
+    .catch(err => {
+        console.error(err)
+        toast.error(err.response.data.message)
+        // return {Error: err}
+        localStorage.removeItem("user")
+        window.location.href = "/home"
+    })
 }
 
 export {getQuiz, evaluateQuiz};

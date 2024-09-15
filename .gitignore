@@ -6,6 +6,9 @@
 /.pnp
 .pnp.js
 Frontend/node_modules
+__pycache__
+flask_venv
+venv
 
 # testing
 /coverage

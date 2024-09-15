@@ -1,5 +1,6 @@
 import apiUrl from "./baseurl";
 import axios from "axios"
+import { toast } from 'react-toastify';
 
 const getChatHistory = async (token, topic_id, type) => {
     return await axios.post(
@@ -9,6 +10,8 @@ const getChatHistory = async (token, topic_id, type) => {
     ).then(response => {
         return response.data.result
     }).catch(() => {
+        console.error(err)
+        toast.error(err.response.data.message)
         localStorage.removeItem("user")
         window.location.href = "/auth/signIn"
     });
@@ -25,18 +28,19 @@ const chat = async (token, topic_id, type, message) => {
 }
 
 const stream = async (token, topic_id, type, message, setState) => {
+    const formdata = new FormData()
+    formdata.append("data", JSON.stringify({
+        "module_id": topic_id,
+        "type": type,
+        "message": message
+    }))
     try {
         const resp = await fetch(apiUrl + "/chat/stream", {
             method: 'POST',
             headers: {
-                "Content-Type": "application/json",
                 Authorization: token
             },
-            body: JSON.stringify({
-                "module_id": topic_id,
-                "type": type,
-                "message": message
-            })
+            body: formdata
         });
 
         const reader = resp.body.getReader();
@@ -64,7 +68,7 @@ const stream = async (token, topic_id, type, message, setState) => {
                         let chunk_part_json = JSON.parse(chunk_part_r);
                         setState(prevState => { 
                             let history = prevState.history
-                            history[history.length - 1].parts[0] += chunk_part_json.message
+                            history[history.length - 1].parts[0].value += chunk_part_json.message
                             return { 
                                 ...prevState, 
                                 history: history
@@ -78,6 +82,7 @@ const stream = async (token, topic_id, type, message, setState) => {
         }
     } catch (err) {
         console.error("Error", err)
+        toast.error(err.response.data.message)
     }
 }
 
