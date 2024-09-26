@@ -31,6 +31,9 @@ class ModuleEvaluationResult(db.Model):
     no_queries_asked = db.Column(
         db.Integer, nullable=False, default=0
     )
+    progress = db.Column(
+        db.Text, nullable=False, default="Chat"
+    )
 
     user = db.relationship(
         "User", backref=db.backref("module_evaluation_results", lazy=True)

@@ -1,4 +1,3 @@
-from unittest import result
 from flask import Blueprint, request, jsonify, current_app
 from models import (
     db,
@@ -13,6 +12,8 @@ from .executor import execute_code
 import json, requests
 from middleware.auth_middleware import token_required
 from utils.analytics import get_module_counts
+from google.generativeai import GenerativeModel
+
 coding_round_blueprint = Blueprint("coding_round", __name__)
 
 
@@ -42,6 +43,34 @@ def get_coding_round(user_id, module_id):
     }
 
     return jsonify(response), 200
+
+
+@coding_round_blueprint.route(
+    "/prompt", methods=["POST"], endpoint="change_prompt_coding_round"
+)
+@token_required
+def change_prompt_coding_round(user_id, module_id):
+    print("here")
+    data = request.json
+    module = ModuleSchema.query.filter_by(id=module_id).first()
+    if not module:
+        return jsonify({"message": "Module not found"}), 404
+
+    coding_round: CodingRound = CodingRound.query.filter_by(
+        id=module.coding_round_id
+    ).first()
+
+    coding_round.prompt = data["prompt"]
+    db.session.commit()
+    current_app.config.pop(f"coding_round_{str(module_id)}_model")
+    current_app.config.setdefault(
+        f"coding_round_{str(module_id)}_model",
+        GenerativeModel(
+            "gemini-1.5-flash",
+            system_instruction=data["prompt"],
+        ),
+    )
+    return jsonify({"message": "Done"}), 200
 
 
 @coding_round_blueprint.route("/create", methods=["POST"])
@@ -87,14 +116,17 @@ def test_coding_round(user_id, module_id):
     #     "inputs": "\n".join([str(param) for param in input_params]) + "\n",
     # }
     try:
-    #     response = requests.post(
-    #         current_app.config["LAMBDA_FUNCTION_API_URL"],
-    #         data=json.dumps(lambda_payload),
-    #         headers={"Content-Type": "application/json"},
-    #     )
-    #     lambda_response = response.json()
+        #     response = requests.post(
+        #         current_app.config["LAMBDA_FUNCTION_API_URL"],
+        #         data=json.dumps(lambda_payload),
+        #         headers={"Content-Type": "application/json"},
+        #     )
+        #     lambda_response = response.json()
 
-        data = execute_code(code=code, input_params="\n".join([str(param) for param in input_params]) + "\n")
+        data = execute_code(
+            code=code,
+            input_params="\n".join([str(param) for param in input_params]) + "\n",
+        )
         return jsonify(data), 200
     except requests.RequestException as e:
         return jsonify({"error": str(e)}), 500
@@ -161,7 +193,10 @@ def evaluate_coding_round(user_id, module_id):
     test_cases_list = [
         {
             "id": tc.id,
-            "input": "\n".join([str(param) for param in list(json.loads(tc.input_params))]) + "\n",
+            "input": "\n".join(
+                [str(param) for param in list(json.loads(tc.input_params))]
+            )
+            + "\n",
             "expected_output": tc.expected_output,
         }
         for tc in test_cases
@@ -176,10 +211,8 @@ def evaluate_coding_round(user_id, module_id):
     ).first()
 
     if not module_evaluation:
-        
-        coding_round_count, quiz_question_count = get_module_counts(
-                module_id=module_id
-            )
+
+        coding_round_count, quiz_question_count = get_module_counts(module_id=module_id)
         module_evaluation = ModuleEvaluationResult(
             user_id=user_id,
             module_id=module_id,
@@ -268,8 +301,10 @@ def evaluate_coding_round(user_id, module_id):
     )
     module_evaluation.coding_round_score = score
     module_evaluation.coding_round_percentage = coding_round_result.score
-    module_evaluation.coding_round_questions=total_test_cases
-    module_evaluation.overall_percentage = (coding_round_result.score + module_evaluation.quiz_percentage)/2
+    module_evaluation.coding_round_questions = total_test_cases
+    module_evaluation.overall_percentage = (
+        coding_round_result.score + module_evaluation.quiz_percentage
+    ) / 2
     db.session.commit()
     return (
         jsonify(

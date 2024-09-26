@@ -1,21 +1,22 @@
 import tempfile, os, subprocess
 
+
 def execute_code(code, input_params=None):
     # Create a temporary file to store the code
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.py') as temp_file:
-        temp_file.write(code.encode('utf-8'))
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".py") as temp_file:
+        temp_file.write(code.encode("utf-8"))
         temp_file_path = temp_file.name
 
     # Prepare to capture output and errors
     try:
         # Use subprocess.run to execute the temporary file
         result = subprocess.run(
-            ['python', temp_file_path],
+            ["python", temp_file_path],
             input=input_params,
             text=True,
-            capture_output=True
+            capture_output=True,
         )
-        
+
         # Capture standard output and standard error
         output = result.stdout
         error = result.stderr
@@ -24,10 +25,11 @@ def execute_code(code, input_params=None):
             return {"result": output}
         else:
             return {"result": error}
-    
+
     finally:
         # Clean up the temporary file
         os.remove(temp_file_path)
+
 
 # def execute_code(code, input_params):
 
@@ -51,25 +53,23 @@ def execute_code(code, input_params=None):
 #         sys.stdin = original_stdin
 
 
-
-
 # def execute_code(code, input_params=None):
 #     # Create a temporary file to store the code
 #     with tempfile.NamedTemporaryFile(delete=False, suffix='.py') as temp_file:
 #         temp_file.write(code.encode('utf-8'))
 #         temp_file_path = temp_file.name
-        
+
 #     print(temp_file_path)
 #     sleep(1000)
 
 #     # Redirect stdout and stdin
 #     original_stdout = sys.stdout
 #     original_stdin = sys.stdin
-    
+
 #     try:
 #         # Redirect stdout to capture output
 #         sys.stdout = io.StringIO()
-        
+
 #         # Redirect stdin to simulate user inputs
 #         if input_params is not None:
 #             sys.stdin = io.StringIO(input_params)
@@ -78,19 +78,17 @@ def execute_code(code, input_params=None):
 #         exec(open(temp_file_path).read())
 #         output = sys.stdout.getvalue()
 #         return {"result": output}
-    
+
 #     except Exception as e:
 #         return {"error": str(e)}
-    
+
 #     finally:
 #         # Restore original stdout and stdin
 #         sys.stdout = original_stdout
 #         sys.stdin = original_stdin
-        
+
 #         # Clean up the temporary file
 #         os.remove(temp_file_path)
-
-
 
 
 # def execute_code(code, input_params):

@@ -40,30 +40,34 @@ def get_login_count(user_id):
     modules = ModuleSchema.query.all()
 
     for module in modules:
-        user_result: ModuleEvaluationResult| None = ModuleEvaluationResult.query.filter_by(
-            user_id=user_id, module_id=module.id
-        ).first()
+        user_result: ModuleEvaluationResult | None = (
+            ModuleEvaluationResult.query.filter_by(
+                user_id=user_id, module_id=module.id
+            ).first()
+        )
         if user_result:
-            percentile = calculate_percentile(user_result=user_result, module_id=module.id)
-            analytics['scores'][module.title] = {
-            "queriesAsked": user_result.no_queries_asked,
-            "quizScore": user_result.quiz_score,
-            "quizQuestions": user_result.quiz_questions,
-            "codingProblemsSolved": user_result.coding_round_score,
-            "codingProblems": user_result.coding_round_questions,
-            "percentile": percentile,
-            "percentileDistribution": {},
-        }
+            percentile = calculate_percentile(
+                user_result=user_result, module_id=module.id
+            )
+            analytics["scores"][module.title] = {
+                "queriesAsked": user_result.no_queries_asked,
+                "quizScore": user_result.quiz_score,
+                "quizQuestions": user_result.quiz_questions,
+                "codingProblemsSolved": user_result.coding_round_score,
+                "codingProblems": user_result.coding_round_questions,
+                "percentile": percentile,
+                "percentileDistribution": {},
+            }
         else:
             coding_round_count, quiz_question_count = get_module_counts(module.id)
-            analytics['scores'][module.title] = {
-            "queriesAsked": 0,
-            "quizScore": 0,
-            "quizQuestions": quiz_question_count,
-            "codingProblemsSolved": 0,
-            "codingProblems": coding_round_count,
-            "percentile": 0,
-            "percentileDistribution": {},
-        }
+            analytics["scores"][module.title] = {
+                "queriesAsked": 0,
+                "quizScore": 0,
+                "quizQuestions": quiz_question_count,
+                "codingProblemsSolved": 0,
+                "codingProblems": coding_round_count,
+                "percentile": 0,
+                "percentileDistribution": {},
+            }
 
     return jsonify(analytics)

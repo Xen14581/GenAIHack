@@ -11,6 +11,7 @@ from models import (
 )
 import json
 from utils.analytics import get_module_counts
+
 # from .evaluator import evaluate_quiz
 
 quiz_blueprint = Blueprint("quiz", __name__)
@@ -151,8 +152,8 @@ def evaluate_quiz(user_id, module_id):
 
     if not module_evaluation:
         coding_round_count, quiz_question_count = get_module_counts(
-                module_id=data["module_id"]
-            )
+            module_id=data["module_id"]
+        )
         module_evaluation = ModuleEvaluationResult(
             user_id=user_id,
             module_id=module_id,
@@ -168,9 +169,7 @@ def evaluate_quiz(user_id, module_id):
     ).first()
 
     if not quiz_result:
-        quiz_result = QuizResult(
-            user_id=user_id, quiz_id=module.quiz_id, score=0
-        )
+        quiz_result = QuizResult(user_id=user_id, quiz_id=module.quiz_id, score=0)
         db.session.add(quiz_result)
         db.session.commit()
 
@@ -212,8 +211,10 @@ def evaluate_quiz(user_id, module_id):
     # Update ModuleEvaluationResult with the score
     module_evaluation.quiz_score = score
     module_evaluation.quiz_percentage = quiz_result.score
-    module_evaluation.quiz_questions=total_questions
-    module_evaluation.overall_percentage = (module_evaluation.coding_round_percentage + quiz_result.score)/2
+    module_evaluation.quiz_questions = total_questions
+    module_evaluation.overall_percentage = (
+        module_evaluation.coding_round_percentage + quiz_result.score
+    ) / 2
     db.session.commit()
 
     return jsonify(

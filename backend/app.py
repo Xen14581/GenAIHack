@@ -3,12 +3,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+import os
 from flask_cors import CORS
 from config import Config
-from models import db, ModuleSchema, CodingRound
+from models import db
 from api import main_blueprint
-from google.generativeai import GenerativeModel
 from utils.modules import init_modules
+
 
 def create_app():
     app = Flask(__name__)
@@ -19,6 +20,7 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+        os.makedirs(app.config.get("ASSETS_DIRECTORY") + "/assets", exist_ok=True)
         init_modules()
 
     app.register_blueprint(main_blueprint)

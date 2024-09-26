@@ -25,9 +25,17 @@ def register():
     login_record = LoginRecord(user_id=user.id)
     db.session.add(login_record)
     db.session.commit()
-    
 
-    return jsonify({"message": "User created successfully.", "username": username, "token": token}), 200
+    return (
+        jsonify(
+            {
+                "message": "User created successfully.",
+                "username": username,
+                "token": token,
+            }
+        ),
+        200,
+    )
 
 
 @auth_bp.route("/login", methods=["POST"])
