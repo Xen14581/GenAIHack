@@ -1,8 +1,9 @@
-import json, os, sqlite3
+import json, os, sqlite3, time, pathlib
 from IPython.display import Image
 from flask import current_app
 from models import ChatHistory
-import pathlib
+from ffmpy import FFmpeg
+import google.generativeai as genai
 
 
 def message_appender(chat_history: list, new_message: list, message_type: str) -> str:
@@ -46,24 +47,58 @@ def combine_history_and_messages(
                 new_db_message["parts"].append(
                     {"type": "audio", "value": part["value"]}
                 )
-
                 sound = pathlib.Path(
                     current_app.config.get("ASSETS_DIRECTORY") + part["value"]
                 ).read_bytes()
-
                 new_gemini_message["parts"].append(
                     {"mime_type": "audio/mp3", "data": sound},
                 )
 
             if part["type"] == "gif":
-                new_db_message["parts"].append({"type": "gif", "value": part["value"]})
-                gif = pathlib.Path(
-                    current_app.config.get("ASSETS_DIRECTORY") + part["value"]
-                ).read_bytes()
+                print("GIF TYPE HISTORY")
+                gif_mp4 = part["value"].split(".gif")[0].strip() + ".mp4"
+                print(gif_mp4)
+                if not os.path.exists(
+                    current_app.config.get("ASSETS_DIRECTORY") + gif_mp4
+                ):
+                    print("Running ffmpeg")
+                    ff = FFmpeg(
+                        inputs={
+                            current_app.config.get("ASSETS_DIRECTORY")
+                            + part["value"]: None
+                        },
+                        outputs={
+                            current_app.config.get("ASSETS_DIRECTORY") + gif_mp4: None
+                        },
+                    )
+                    ff.run()
 
-                new_gemini_message["parts"].append(
-                    {"mime_type": "video/mp4", "data": gif},
+                try:
+                    print
+                    if not part.get("file_api", None):
+                        raise Exception("Uploading the file first time")
+                    file_api = genai.get_file(part["file_api"])
+                except Exception as e:
+                    print(e)
+                    print("inexception")
+                    file_api = genai.upload_file(
+                        path=current_app.config.get("ASSETS_DIRECTORY") + gif_mp4,
+                        mime_type="video/mp4",
+                        display_name=os.path.basename(gif_mp4),
+                    )
+                while True:
+                    print("state:", str(file_api.state))
+                    if str(file_api.state) == "2":
+                        break
+                    else:
+                        time.sleep(5)
+                        file_api = genai.get_file(file_api.name)
+                        print("INWHILE FILE_API", file_api)
+
+                new_db_message["parts"].append(
+                    {"type": "gif", "value": part["value"], "file_api": file_api.name}
                 )
+                new_gemini_message["parts"].append(file_api)
 
         gemini_format.append(new_gemini_message)
         dbstore_format.append(new_db_message)
@@ -102,15 +137,49 @@ def combine_history_and_messages(
                 )
                 latest_gemini_message["parts"].append(image)
 
-            if file["type"] == "gif":
+            if part["type"] == "gif":
+                print("GIF TYPE Latest chat")
+                gif_mp4 = part["value"].split(".gif")[0].strip() + ".mp4"
+                print(gif_mp4)
+                if not os.path.exists(
+                    current_app.config.get("ASSETS_DIRECTORY") + gif_mp4
+                ):
+                    print("Running ffmpeg")
+                    ff = FFmpeg(
+                        inputs={
+                            current_app.config.get("ASSETS_DIRECTORY")
+                            + part["value"]: None
+                        },
+                        outputs={
+                            current_app.config.get("ASSETS_DIRECTORY") + gif_mp4: None
+                        },
+                    )
+                    ff.run()
+                print("RAN FFMPEg")
+                try:
+                    if not part.get("file_api", None):
+                        raise Exception("Uploading the file first time")
+                    file_api = genai.get_file(part["file_api"])
+                except:
+                    file_api = genai.upload_file(
+                        path=current_app.config.get("ASSETS_DIRECTORY") + gif_mp4,
+                        mime_type="video/mp4",
+                        display_name=os.path.basename(gif_mp4),
+                    )
+                while True:
+                    print("state:", str(file_api.state))
+                    if str(file_api.state) == "2":
+                        break
+                    else:
+                        time.sleep(5)
+                        file_api = genai.get_file(file_api.name)
+                        print("INWHILE in latest FILE_API", file_api)
+
                 latest_db_message["parts"].append(
-                    {"type": "image", "value": file["file_path"]}
+                    {"type": "gif", "value": part["value"], "file_api": file_api.name}
                 )
-                image = Image(
-                    filename=current_app.config.get("ASSETS_DIRECTORY")
-                    + file["file_path"]
-                )
-                latest_gemini_message["parts"].append(image)
+                latest_gemini_message["parts"].append(file_api)
+
         dbstore_format.append(latest_db_message)
         gemini_format.append(latest_gemini_message)
     return gemini_format, dbstore_format

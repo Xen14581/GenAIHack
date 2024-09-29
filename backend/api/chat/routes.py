@@ -120,7 +120,7 @@ def generate_text_stream(user_id):
         gemini_message, db_message = combine_history_and_messages(
             chat_history, message, files_api
         )
-
+        print(gemini_message)
         chat_history.messages = json.dumps(db_message)
         db.session.commit()
         assets_dir = app.config.get("ASSETS_DIRECTORY")
@@ -187,8 +187,14 @@ def generate_text_stream(user_id):
                             print("Got result none")
                             continue
                         if result[0] == "render":
-                            model_response.append({"type": "image", "value": result[1]})
-
+                            model_response.append(
+                                {
+                                    "type": (
+                                        "gif" if result[1].endswith(".gif") else "image"
+                                    ),
+                                    "value": result[1],
+                                }
+                            )
                             yield "data: " + json.dumps(
                                 {
                                     "message": f"\n![{os.path.basename(result[1])}]({result[1]})\n"
