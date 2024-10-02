@@ -82,7 +82,7 @@ const Message = ({role, messages, width, height}) =>{
                                                         : message.type === "audio" 
                                                             ? 
                                                             <audio src={message.value} controls controlsList="nodownload" style={{width: '100%'}} />
-                                                            : message.type === "image" 
+                                                            : ["image", "gif"].includes(message.type)
                                                                 ? 
                                                                 <img src={message.value} style={{height: window.innerWidth * 0.2, width: window.innerWidth * 0.2 }} />
                                                                 : 
