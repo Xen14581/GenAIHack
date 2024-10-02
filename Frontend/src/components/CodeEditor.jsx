@@ -55,7 +55,7 @@ const CodeEditor = ({ codeTemplate, onSubmit }) => {
 
     return (
         <Stack sx={{height:'100%', width: '100%', border:1, borderWidth: '1px', borderRadius: '12px', borderColor: '#aaa'}}>
-            <Box sx={{height: '8%', width: '100%', px:2, backgroundColor: '#ddd', borderRadius: '12px 12px 0 0'}}>
+            <Box sx={{height: '8%', width: '100%', px:2, backgroundColor: '#E4F1FF', borderRadius: '12px 12px 0 0'}}>
                 <Box sx={{height: '100%', width: '100%', display: 'flex', justifyContent: 'space-between'}}>
                     <Typography sx={{display: 'flex', alignItems: 'center'}}>
                         Code
@@ -79,17 +79,19 @@ const CodeEditor = ({ codeTemplate, onSubmit }) => {
                     </Box>
                 </Box>
             </Box>
-            <Editor 
-                height="90%" 
-                width="100%" 
-                language={state.language}
-                defaultValue={state.code}
-                theme={'vs-light'}
-                onMount={handleEditorDidMount}
-                onChange={handleCodeChange}
-                options={{readOnly: [].includes(state.cursorPosition[0])}}
-            />
-            <Typography component="span" sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, backgroundColor: '#ddd', borderRadius: '0 0 12px 12px'}}>
+            <Box sx={{height: '85%'}}>
+                <Editor 
+                    height="100%" 
+                    width="100%" 
+                    language={state.language}
+                    defaultValue={state.code}
+                    theme={'vs-light'}
+                    onMount={handleEditorDidMount}
+                    onChange={handleCodeChange}
+                    options={{readOnly: [].includes(state.cursorPosition[0])}}
+                />
+            </Box>
+            <Typography component="span" sx={{height: '8%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, backgroundColor: '#E4F1FF', borderRadius: '0 0 12px 12px'}}>
                 {`Line: ${state.cursorPosition[0]}, Column: ${state.cursorPosition[1]}`}
                 <Button 
                     variant="text" 

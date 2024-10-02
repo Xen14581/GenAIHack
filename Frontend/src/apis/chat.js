@@ -9,7 +9,7 @@ const getChatHistory = async (token, topic_id, type) => {
         {headers: {Authorization: token}}
     ).then(response => {
         return response.data.result
-    }).catch(() => {
+    }).catch(err => {
         console.error(err)
         toast.error(err.response.data.message)
         localStorage.removeItem("user")
@@ -27,13 +27,21 @@ const chat = async (token, topic_id, type, message) => {
     }
 }
 
-const stream = async (token, topic_id, type, message, setState) => {
+const stream = async (token, topic_id, type, message, setState, images=null, audio=null) => {
     const formdata = new FormData()
     formdata.append("data", JSON.stringify({
         "module_id": topic_id,
         "type": type,
         "message": message
     }))
+    if (images) {
+        [...images].forEach(img => {
+            formdata.append("files", img);
+        });
+    }
+    if (audio) {
+        formdata.append("files", audio, 'audio.mp3')
+    }
     try {
         const resp = await fetch(apiUrl + "/chat/stream", {
             method: 'POST',
@@ -42,6 +50,10 @@ const stream = async (token, topic_id, type, message, setState) => {
             },
             body: formdata
         });
+
+        if (resp.status >= 400) {
+            throw(new Error(resp.statusText))
+        }
 
         const reader = resp.body.getReader();
         const decoder = new TextDecoder("utf-8");
@@ -55,8 +67,9 @@ const stream = async (token, topic_id, type, message, setState) => {
             }
 
             const chunk = decoder.decode(value, {stream: true});
-            buffer += chunk;
 
+            buffer += chunk;
+            
             while (buffer.includes("\n\n")) {
                 const newlineindex = buffer.indexOf("\n\n")
                 const chunk_part = buffer.slice(0, newlineindex)
@@ -81,8 +94,8 @@ const stream = async (token, topic_id, type, message, setState) => {
             }
         }
     } catch (err) {
+        toast.error(err.message)
         console.error("Error", err)
-        toast.error(err.response.data.message)
     }
 }
 

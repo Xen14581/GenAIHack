@@ -26,41 +26,76 @@ const Message = ({role, messages, width, height}) =>{
                 width: '100%',
                 px: width > 1000 ? 1 : 0, 
                 overflowWrap: 'break-word',
-                display: 'flex',
-
+                display: 'flex'
             }}>
-                {messages.map((message, index) => {
-                    if (message.value?.startsWith("Student Code:")) {
-                        return (
-                            <p key={index} style={{textAlign: 'center', width: '100%', fontSize: '14px', fontWeight: '700'}}>Code submitted</p>
-                        )
-                    } else {
-                        return (
-                            <Box key={index} sx={{display: 'flex', width: '100%', overflowWrap: 'break-word'}}>
-                                <Box sx={{minWidth: width > 1000 ? '8%' : width * 0.1, display: 'flex', justifyContent: 'center', mt: window.innerWidth > 1000 ? '0.8em' : '0.5vh'}}>
-                                    {role === "user" ? <Avatar src="/broken-image.jpg" sx={width > 1000 ? { bgcolor: blue[600] , width: '28px', height: '28px'} : { bgcolor: blue[600] , width: 30, height: 30}}/> : role === 'loading' ? <Loader logoHeight="28px" logoWidth="28px" inverted /> : <InvertedLogo width={"28px"} height={"28px"} />}
-                                </Box>
-                                <Typography variant="p" sx={{width: '90%'}} >
+                {
+                    !messages.filter(msg => msg.value?.startsWith("Student Code:") || msg.value?.startsWith("Quiz Score:")).length
+                    ?
+                        <Box sx={{
+                            minWidth: width > 1000 ? '8%' : width * 0.1, 
+                            display: 'flex', 
+                            justifyContent: 'center', 
+                            alignItems: 'flex-start',
+                            mt: window.innerWidth > 1000 ? '0.8em' : '0.5vh'
+                        }}>
+                            {
+                                role === "user" ? 
+                                    <Avatar src="/broken-image.jpg" sx={width > 1000 ? { bgcolor: blue[600] , width: '28px', height: '28px'} : { bgcolor: blue[600] , width: 30, height: 30}}/> 
+                                : role === 'loading' ? 
+                                    <Loader logoHeight="28px" logoWidth="28px" inverted /> 
+                                : 
+                                    <InvertedLogo width={"28px"} height={"28px"} />
+                            }
+                        </Box>
+                    :
+                        <></>
+                }
+                <Box sx={{display: 'flex', width: '100%', flexDirection: 'column'}}>
+                    {
+                        messages.map((message, index) => {
+                            return (
+                                <Box key={index} sx={{width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
                                     {
-                                        message.type === "text" 
-                                        ? 
-                                        <Markdown remarkPlugins={[remarkGfm]} components={components} key={index} style={{overflowWrap: 'break-word', width: '100%'}}>
-                                            {message.value}
-                                        </Markdown>
-                                        : message.type === "audio" 
-                                            ? 
-                                            <audio src={message.value} controls controlsList="nodownload" style={{width: '100%'}} />
-                                            : message.type === "image" 
-                                                ? 
-                                                <img src={message.value} style={{height: window.innerWidth * 0.4, width: window.innerWidth * 0.4 }} />
-                                                : 
-                                                JSON.stringify(message)
+                                        message.value?.startsWith("Student Code:")
+                                        ?
+                                            <p style={{textAlign: 'center', width: '100%', fontSize: '14px', fontWeight: '700'}}>Code submitted</p>
+                                        : 
+                                        message.value?.startsWith("Quiz Score:")
+                                        ?
+                                            <p style={{textAlign: 'center', width: '100%', fontSize: '14px', fontWeight: '700'}}>Quiz submitted</p>
+                                        : 
+                                            ["Listen to this audio for my response", "Lets look at this image"].includes(message.value)
+                                            ?
+                                            <></>
+                                            :
+                                            <Box sx={{display: 'flex', width: '100%', overflowWrap: 'break-word'}}>
+                                                {/* <Box sx={{minWidth: width > 1000 ? '8%' : width * 0.1, display: 'flex', justifyContent: 'center', mt: window.innerWidth > 1000 ? '0.8em' : '0.5vh'}}>
+                                                    {role === "user" ? <Avatar src="/broken-image.jpg" sx={width > 1000 ? { bgcolor: blue[600] , width: '28px', height: '28px'} : { bgcolor: blue[600] , width: 30, height: 30}}/> : role === 'loading' ? <Loader logoHeight="28px" logoWidth="28px" inverted /> : <InvertedLogo width={"28px"} height={"28px"} />}
+                                                </Box> */}
+                                                <Typography variant="p" sx={{width: '100%'}} >
+                                                    {
+                                                        message.type === "text" 
+                                                        ? 
+                                                        <Markdown remarkPlugins={[remarkGfm]} components={components} key={index} style={{overflowWrap: 'break-word', width: '100%'}}>
+                                                            {message.value}
+                                                        </Markdown>
+                                                        : message.type === "audio" 
+                                                            ? 
+                                                            <audio src={message.value} controls controlsList="nodownload" style={{width: '100%'}} />
+                                                            : message.type === "image" 
+                                                                ? 
+                                                                <img src={message.value} style={{height: window.innerWidth * 0.2, width: window.innerWidth * 0.2 }} />
+                                                                : 
+                                                                JSON.stringify(message)
+                                                    }
+                                                </Typography> 
+                                            </Box>
                                     }
-                                </Typography> 
-                            </Box>
-                        )
+                                </Box>
+                            )
+                        })
                     }
-                 })}
+                </Box>
             </Box>
         </Box>
     )

@@ -23,6 +23,13 @@ const Code = () => {
                 test_cases: data.results
             }
         })
+        if (data.results.every(obj => obj.pass === true)) {
+            let progress = await setTopicProgress(user.token, selectedTopic.id, "Complete")
+            if (progress.message === "OK") {
+                dispatch(updateTopic([selectedTopic.id, {'progress': 'Complete'}]))
+                selectedTopic = {...selectedTopic, ...{progress: 3}}
+            }
+        }
         let trigger = `Student Code:\n${code}\nTest Cases:\n\n${data.results.map(tcase => {
             return [
                 'Input:', 
@@ -56,12 +63,20 @@ const Code = () => {
             {window.innerWidth > 1000 ?
                 <>
                     {Object.keys(problem).length && 
-                        <Grid container spacing={1} sx={{width: '100%', py: "0.5rem"}}>
-                            <Grid size={3} sx={{ border: 1, borderColor: '#aaa', borderWidth: '1px', borderRadius: '12px' }}>
+                        <Grid container spacing={1} sx={{py: "0.5rem"}}>
+                            <Grid size={3} sx={{ border: 1, borderColor: '#aaa', borderWidth: '1px', borderRadius: '12px', height: '100%' }}>
                                 <ProblemPanel problemStatement={problem.programming_question} />
                             </Grid>
-                            <Grid size={5}>
-                                <Stack style={{ height: '100%'}} spacing={1}>
+                            <Grid size={5} sx={{height: '90vh'}}>
+                                {/* <Grid container direction='row' columns={12} spacing={1} sx={{height: '100%', width: '100%'}}>
+                                    <Grid item size={8} sx={{width: '100%'}}>   
+                                        <CodeEditor codeTemplate={problem.template_code} onSubmit={submitCode} />
+                                    </Grid>
+                                    <Grid item size={4} sx={{ width: '100%'}}>
+                                        <TestPanel testCases={problem.test_cases} />
+                                    </Grid>
+                                </Grid> */}
+                                <Stack style={{ maxHeight: '100%', minHeight: '100%', height: '100%'}} spacing={1}>
                                     <Box sx={{ height: '60%', width: '100%'}}>
                                         <CodeEditor codeTemplate={problem.template_code} onSubmit={submitCode} />
                                     </Box>

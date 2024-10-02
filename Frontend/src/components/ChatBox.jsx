@@ -1,15 +1,27 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useLayoutEffect} from "react";
 import { TextField, IconButton, Box, Stack, InputAdornment } from "@mui/material";
 import MessagePanel from "./MessagePanel";
 import StepperComponent from "./Stepper";
 import { useSelector } from 'react-redux'
 import {getChatHistory, chat, stream} from "../apis/chat";
-import SendIcon from '@mui/icons-material/Send';
 import ChatInput from "./ChatInput";
+import { useDispatch } from "react-redux";
+import { setTopicProgress } from "../apis/progress";
+
+function containsQuizForModel(data) {
+    return data.some(item => {
+      if (item.role === "model") {
+        return item.parts.some(part => part.value.includes("quiz"));
+      }
+      return false;
+    });
+  }
 
 const ChatBox=({width, height})=>{
     const selectedTopic = useSelector(state => state.topic.selectedTopic)
     const user = useSelector(state => state.user.value)
+    // const currentActiveStep = useSelector(state => state.step.activeStep)
+    const dispatch = useDispatch()
 
     const [state, setState] = useState({
         history: [],
@@ -19,40 +31,35 @@ const ChatBox=({width, height})=>{
     })
 
     const handleSubmit = async (message = '') => {
-        // if(message === '' && !state.textValue) {
-        //     return
-        // }
-        // let query = state.textValue ? state.textValue : message
-        // setState(prev => {
-        //     return {
-        //         ...prev,
-        //         history: [...prev.history, {'role': 'user', 'parts': [query]}, {'role': 'loading', 'parts': [""]}],
-        //         textValue: ''
-        //     }
-        // })
-        // if (message !== '') {
-        //     localStorage.removeItem('trigger')
-        // }
-        // await stream(user.token, selectedTopic.id, location === 'chat' ? 'module' : 'coding_round', query, setState)
-        // setState(prev => {
-        //     let history = prev.history
-        //     history[history.length - 1].role = "model"
-        //     return {
-        //         ...prev,
-        //         history: history,
-        //     }
-        // })
-
         // If message from coding round is triggered
         if (message !== "") {
             setState(prev => {
                 return {
                     ...prev,
-                    history: [...prev.history, {'role': 'user', 'parts': [message]}, {'role': 'loading', 'parts': [""]}],
+                    history: [
+                        ...prev.history, 
+                        {
+                            'role': 'user', 
+                            'parts': [
+                                {
+                                    type: 'text', 
+                                    value: message
+                                }
+                            ]
+                        }, 
+                        {
+                            'role': 'loading', 
+                            'parts': [
+                                {
+                                    type: 'text', 
+                                    value: ''
+                                }
+                            ]
+                        }
+                    ],
                     textValue: ''
                 }
             })
-            localStorage.removeItem('trigger')
             await stream(user.token, selectedTopic.id, location === 'chat' ? 'module' : 'coding_round', message, setState)
             setState(prev => {
                 let history = prev.history
@@ -66,36 +73,101 @@ const ChatBox=({width, height})=>{
 
         // If audio is provided
         else if (state.audioUrl) {
-            let query = "Listen to this audio"
+            let query = "Listen to this audio for my response"
             if (state.textValue !== "") {
                 query = state.textValue
             }
-            console.log('audio sent')
+            setState(prev => {
+                let audioBlob = prev.audioUrl
+                return {
+                    ...prev,
+                    history: [
+                        ...prev.history, 
+                        {
+                            'role': 'user', 
+                            'parts': [
+                                {
+                                    type: 'text', 
+                                    value: query
+                                },
+                                {
+                                    type: 'audio', 
+                                    value: URL.createObjectURL(audioBlob)
+                                }
+                            ]
+                        }, 
+                        {
+                            'role': 'loading', 
+                            'parts': [{
+                                type: 'text', 
+                                value: ''
+                            }]
+                        }
+                    ],
+                    textValue: '',
+                    audioUrl: null,
+                }
+            })
+            await stream(user.token, selectedTopic.id, location === 'chat' ? 'module' : 'coding_round', query, setState, null, state.audioUrl)
             setState(prev => {
                 let history = prev.history
-                // history[history.length - 1].role = "model"
+                history[history.length - 1].role = "model"
                 return {
                     ...prev,
                     history: history,
-                    audioUrl: null
+                    audioUrl: null,
+                    textValue: ''
                 }
             })
         } 
 
         // If image is provided
         else if (state.image.length) {
-            let query = "Listen to this audio"
+            let query = "Lets look at this image"
             if (state.textValue !== "") {
                 query = state.textValue
             }
-            console.log('image sent')
+            setState(prev => {
+                let images = prev.image
+                return {
+                    ...prev,
+                    history: [
+                        ...prev.history, 
+                        {
+                            'role': 'user', 
+                            'parts': [{
+                                type: 'text', 
+                                value: query
+                            },
+                            ...images.map(img => {
+                                return {
+                                    type: 'image', 
+                                    value: URL.createObjectURL(img)
+                                }
+                            }) 
+                            ]
+                        }, 
+                        {
+                            'role': 'loading', 
+                            'parts': [{
+                                type: 'text', 
+                                value: ''
+                            }]
+                        }
+                    ],
+                    textValue: '',
+                    image: [],
+                }
+            })
+            await stream(user.token, selectedTopic.id, location === 'chat' ? 'module' : 'coding_round', query, setState, state.image, null)
             setState(prev => {
                 let history = prev.history
-                // history[history.length - 1].role = "model"
+                history[history.length - 1].role = "model"
                 return {
                     ...prev,
                     history: history,
-                    image: []
+                    image: [],
+                    textValue: ''
                 }
             })
         } 
@@ -143,7 +215,6 @@ const ChatBox=({width, height})=>{
                 }
             })
         } 
-
         else {
             console.log('type or attach something first')
             return
@@ -153,7 +224,7 @@ const ChatBox=({width, height})=>{
     let location = window.location.pathname.split("/")
     location = location[location.length - 1]
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const getdata = async () => {
             let data = await getChatHistory(user.token, selectedTopic.id, location === 'chat' ? 'module' : 'coding_round')
             if (data.length >= 0) {
@@ -165,6 +236,14 @@ const ChatBox=({width, height})=>{
                 }
                 data = [...data.reverse()]
             }
+            let activeStep = containsQuizForModel(data) ? 1 : 0
+            if (activeStep > selectedTopic.progress) {
+                let progress = await setTopicProgress(user.token, selectedTopic.id, "Quiz")
+                if (progress.message === "OK") {
+                    dispatch(updateTopic([selectedTopic.id, {'progress': 1}]))
+                    selectedTopic = {...selectedTopic, ...{progress: 1}}
+                }
+            }
             setState(prev => {
                 return {
                     ...prev,
@@ -174,24 +253,31 @@ const ChatBox=({width, height})=>{
                     audioUrl: ''
                 }
             })
-        }
-        getdata()
-    }, [selectedTopic]) 
 
-    useEffect(() => {
-        const getdata = async () => {
-            let trigger = localStorage.getItem('trigger')
+            let trigger = localStorage.getItem('triggerQuiz')
             if (trigger) {
+                localStorage.removeItem('triggerQuiz')
                 await handleSubmit(trigger)
             }
         }
         getdata()
-    }, [localStorage.getItem("trigger")])
+    }, [selectedTopic])
+
+    useLayoutEffect(() => {
+        const getdata = async () => {
+            let trigger = localStorage.getItem('trigger')
+            if (trigger) {
+                await handleSubmit(trigger)
+                localStorage.removeItem('trigger')
+            }
+        }
+        getdata()
+    }, [localStorage.getItem('trigger')])
 
     return(
         <Box sx={{display: 'flex', flexDirection: 'column', width: '100%', height: '100%', px: 4, py: 1, maxHeight: height }}>
-            <Box sx={{mt: 3}}>
-                <StepperComponent />
+            <Box sx={{pt: 3, pb: 1, width: '100%'}}>
+                <StepperComponent active={selectedTopic?.progress} />
             </Box>
             <MessagePanel chatHistory={[...state.history].reverse()} width={width} height={height} />
             <ChatInput state={state} setState={setState} handleSubmitChat={handleSubmit} />

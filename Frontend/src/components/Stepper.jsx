@@ -10,16 +10,20 @@ const steps = [
     {name: 'Code', route: '/learn/code'}
 ];
 
-export default function StepperComponent() {
-
-  const location = window.location.pathname
-  const activeStepIndex = steps.indexOf(steps.filter(value => value.route === location)[0])
-
+export default function StepperComponent({active}) {
   return (
     <Box sx={{ width: '100%' }}>
-      <Stepper activeStep={activeStepIndex} alternativeLabel>
+      <Stepper activeStep={active} alternativeLabel>
         {steps.map((item, index) => (
-          <Step key={index} onClick={() => {window.location.href = item.route}} sx={{cursor: 'pointer'}}>
+          <Step 
+            key={index} 
+            onClick={() => {
+              if (index <= active) {
+                window.location.href = item.route
+              }
+            }} 
+            sx={{cursor: index <= active ? 'pointer' : 'auto'}}
+          >
             <StepLabel>{item.name}</StepLabel>
           </Step>
         ))}

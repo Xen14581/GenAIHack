@@ -11,18 +11,18 @@
   
   /* Track */
   ::-webkit-scrollbar-track {
-    box-shadow: inset -1px 0 0 #002A47; 
+    box-shadow: inset -1px 0 0 #005694; 
   }
    
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: #478BF2; 
+    background: #63acff; 
     border-radius: 3.5px;
   }
   
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    background: #002A47; 
+    background: #005694; 
   }
   
 /* unvisited link */

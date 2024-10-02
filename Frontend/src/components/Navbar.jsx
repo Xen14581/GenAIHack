@@ -8,7 +8,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Avatar from '@mui/material/Avatar';
 import { blue } from '@mui/material/colors';
-import { Grid2 } from '@mui/material';
+import { Grid2, Typography } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Logout from '@mui/icons-material/Logout';
 import Divider from '@mui/material/Divider';
@@ -369,9 +369,12 @@ const Navbar = (props) => {
                                             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                                             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                                         >
-                                            <MenuItem id="profile" onClick={handleClose}>
+                                            {/* <MenuItem id="profile" onClick={handleClose}>
                                                 <Avatar /> Profile
-                                            </MenuItem>
+                                            </MenuItem> */}
+                                            <Typography variant='p' sx={{px: 2, py: 1}}>
+                                                Email: {user.username}
+                                            </Typography>
                                             <Divider />
                                             <MenuItem id="logout" onClick={handleClose}>
                                                 <ListItemIcon>

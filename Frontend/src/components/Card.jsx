@@ -36,7 +36,7 @@ const DSACard = ({ topic }) => {
         flexDirection: "column",
         flexWrap: "wrap",
         justifyContent: 'space-between',
-        p: 2,
+        p: window.innerWidth > 1000 ? 2 : 1,
         width: "100%",
         height: "50vh",
         border: "1px solid black",
@@ -45,7 +45,7 @@ const DSACard = ({ topic }) => {
     >
       <CardContent sx={{maxHeight: '80%'}}>
         <Typography
-          variant="h4"
+          variant={window.innerWidth > 1000 ? "h5" : "h6"}
           sx={{
             wordBreak: "break-word",
             whiteSpace: "normal",
@@ -65,7 +65,7 @@ const DSACard = ({ topic }) => {
             color: "#006CB8",
             overflowWrap: "wrap",
             marginBottom: "2vh",
-            fontSize: window.innerWidth > 1000 ? 18 : 15,
+            fontSize: window.innerWidth > 1000 ? 15 : 13,
             overflowY: 'auto'
           }}
         >
@@ -77,7 +77,7 @@ const DSACard = ({ topic }) => {
       <CardActions sx={{display: 'flex', justifyContent: 'center', p: 0}}>
         <Button
           variant="contained"
-          size={window.innerWidth > 1000 ? "large" : 'small'}
+          size={window.innerWidth > 1000 ? "medium" : 'small'}
           sx={{
             width: "90%",
             justifyContent: "start",

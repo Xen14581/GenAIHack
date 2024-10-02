@@ -182,7 +182,6 @@ const SignUp = () => {
                   type="password"
                   id="password"
                   autoComplete="current-password"
-                  autoFocus
                   required
                   fullWidth
                   variant="outlined"
@@ -201,7 +200,6 @@ const SignUp = () => {
                   type="password"
                   id="repassword"
                   autoComplete="current-password"
-                  autoFocus
                   required
                   fullWidth
                   variant="outlined"

@@ -3,8 +3,10 @@ import { Typography, Stack, Button, Divider, Grid2, Box } from "@mui/material";
 import Infographic from "../assets/Infographic.png";
 import DSACard from "../components/Card";
 import { useSelector, useDispatch } from 'react-redux'
-import { setAllTopics } from "../reducers/topicSlice";
+import Carousel from 'react-material-ui-carousel'
+import { setAllTopics, updateTopic } from "../reducers/topicSlice";
 import { getTopics } from "../apis/topics";
+import { getTopicProgress } from "../apis/progress";
 
 const HomePage = () => {
   document.title = "Sage.AI | Home"
@@ -12,9 +14,16 @@ const HomePage = () => {
   const user = useSelector(state => state.user.value)
   const topics = useSelector(state => state.topic.topics)
   const dispatch = useDispatch()
+  const aboutRef = useRef(null)
   const topicsRef = useRef(null)
 
-  const handleScroll = () => {
+  const pages = ["Sage", "usage", "carousel", "coming", "soon!"]
+
+  const handleScrollToIntro = () => {
+    aboutRef.current.scrollIntoView({behavior: 'smooth', block: 'start'})
+  }
+
+  const handleScrollToCourse = () => {
     topicsRef.current.scrollIntoView({behavior: 'smooth', block: 'start'})
   }
 
@@ -28,8 +37,14 @@ const HomePage = () => {
 
   useLayoutEffect(() => {
     const getdata = async () => {
-      const data = await getTopics()
+      let data = await getTopics()
       dispatch(setAllTopics(data))
+      if (user) {
+        data.map(async topic => {
+          let progress = await getTopicProgress(user.token, topic.id)
+          dispatch(updateTopic([topic.id, progress]))
+        })
+      }
     }
     getdata()
   }, [])
@@ -37,7 +52,7 @@ const HomePage = () => {
   return (
     // Outer layer providing top and bottom padding
     <Stack
-      spacing={8}
+      spacing={6}
       direction="column"
       sx={{
         height: "min-content",
@@ -75,9 +90,9 @@ const HomePage = () => {
                 border: "1px solid #006CB8",
                 width: window.innerWidth > 1000 ? "25%" : '35%',
               }}
-              onClick={handleScroll}
+              onClick={handleScrollToIntro}
             >
-              Explore
+              About Sage
             </Button>
             <Button
               variant="contained"
@@ -85,11 +100,11 @@ const HomePage = () => {
                 backgroundColor: "white",
                 color: "#006CB8",
                 border: "1px solid #006CB8",
-                width: window.innerWidth > 1000 ? "25%" : '35%',
+                width: window.innerWidth > 1000 ? "30%" : '45%',
               }}
-              onClick={handleRedirect}
+              onClick={handleScrollToCourse}
             >
-              {user ? "Start Learning" : "Login"}
+              {user ? "Browse Courses" : "Login"}
             </Button>
           </Stack>
         </Stack>
@@ -98,7 +113,33 @@ const HomePage = () => {
         <img src={Infographic} style={{ width: window.innerWidth > 1000 ? "40%" : "90%", height: window.innerWidth > 1000 ? "40%" : "90%" }} />
       </Stack>
 
-      <Divider />
+      {/* <Stack 
+        direction={window.innerWidth > 1000 ? "row" : 'column'} 
+        sx={{
+          width: '100%', 
+          height: '65vh', 
+          backgroundColor: "#C4E0FF", 
+          borderRadius: window.innerWidth > 1000 ? '8px' : 0, 
+          scrollMarginTop: "12vh",
+
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          
+        }}
+        ref={aboutRef}
+      >
+        Why sage
+        <Carousel height="100%" duration={100} sx={{width: '100%', height: '100%'}}>
+          {pages.map((item, idx) => 
+            <Box key={idx} sx={{display: 'flex', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center'}}>
+              <Typography variant="h2" sx={{fontSize: '25', color: 'white'}}>
+                {item}
+              </Typography>
+            </Box>
+          )}
+        </Carousel>
+      </Stack> */}
 
       <Stack
         direction="column"
@@ -108,6 +149,7 @@ const HomePage = () => {
         height={"50%"}
         flexWrap={"wrap"}
         ref={topicsRef}
+        sx={{scrollMarginTop: "12vh"}}
       >
         <Typography
           variant={window.innerWidth > 1000 ? "h4" : 'h4'}
@@ -122,15 +164,27 @@ const HomePage = () => {
         </Typography>
       </Stack>
       
-      <Grid2 container columns={12} spacing={2} sx={{width: '100%', height: window.innerWidth > 1000 ? '50vh' : 'min-content', display: 'flex', justifyContent: 'center'}}>
-        {topics && topics.map((topic, idx) => 
-          <Grid2 item size={window.innerWidth > 1000 ? 4 : 8} key={idx} sx={{height: '100%'}}>
-            <DSACard
-              topic={topic}
-            />
-          </Grid2>
-        )}
-      </Grid2>
+      <Box sx={{width: '100%', overflowX: 'auto', height: window.innerWidth > 1000 ? '55vh' : 'min-content'}}>
+        <Stack 
+          direction="row"  
+          spacing={3} 
+          sx={{
+            width: 'max-content', 
+            height: '100%', 
+            // display: 'flex', 
+            // justifyContent: 'center',
+          }}
+        >
+          {topics && topics.map((topic, idx) => 
+            // <Grid2 item size={window.innerWidth > 1000 ? 3 : 10} key={idx} sx={{height: '100%'}}>
+              <DSACard
+                key={idx}
+                topic={topic}
+              />
+            // </Grid2>
+          )}
+        </Stack>
+      </Box>
     </Stack>
   );
 };

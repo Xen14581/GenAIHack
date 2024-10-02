@@ -10,7 +10,8 @@ const ChatInput = ({state, setState, handleSubmitChat}) => {
 
     const [audio, setAudio] = useState({
         open: false,
-        size: 0
+        size: 0,
+        audio: null
     })
     const [hover, setHover] = useState('')
 
@@ -18,6 +19,7 @@ const ChatInput = ({state, setState, handleSubmitChat}) => {
 
     const recorderControls = useAudioRecorder(
         {
+            autoGainControl: true,
             noiseSuppression: true,
             echoCancellation: true,
         },
@@ -49,18 +51,13 @@ const ChatInput = ({state, setState, handleSubmitChat}) => {
         })
     }
 
-    const handleAudioClose = () => {
+    const handleAudioClose = (_, save=false) => {
         recorderControls.stopRecording()
         setAudio(prev => {
             return {
                 ...prev,
                 open: false,
-            }
-        })
-        setState(prev => {
-            return {
-                ...prev,
-                audioUrl: null
+                audio: null
             }
         })
     }
@@ -70,7 +67,8 @@ const ChatInput = ({state, setState, handleSubmitChat}) => {
             setAudio(prev => {
                 return {
                     ...prev,
-                    size: blob.size
+                    size: blob.size,
+                    audio: blob
                 }
             })
             setState(prev => {
@@ -83,8 +81,7 @@ const ChatInput = ({state, setState, handleSubmitChat}) => {
     };
 
     const handleSendAudio = () => {
-        // send to backend
-        handleAudioClose()
+        handleAudioClose("", true)
         handleSubmitChat()
     }
 
@@ -112,13 +109,13 @@ const ChatInput = ({state, setState, handleSubmitChat}) => {
 
     // Display logic
 
-    if (audio.open && state.audioUrl) {
+    if (audio.open && audio.audio) {
         return (
             <Stack sx={{ width: "100%" }} spacing={2} direction='row'>
                 <IconButton onClick={handleAudioClose}>
                     <DeleteIcon />
                 </IconButton>
-                <audio src={URL.createObjectURL(state.audioUrl)} controls controlsList="nodownload" style={{width: '100%'}} />
+                <audio src={URL.createObjectURL(audio.audio)} controls controlsList="nodownload" style={{width: '100%'}} />
                 <IconButton onClick={handleSendAudio}>
                     <SendIcon />
                 </IconButton>
@@ -126,9 +123,9 @@ const ChatInput = ({state, setState, handleSubmitChat}) => {
         )
     }
 
-    if (audio.open && !state.audioUrl) {
+    if (audio.open && !audio.audio) {
         return (
-            <Box sx={{ width: "100%", display: 'flex', justifyContent: 'center'}}>
+            <Box sx={{ width: "100%", display: 'flex', justifyContent: 'center', height: '9vh'}}>
                 <AudioRecorder
                     onRecordingComplete={addAudioElement}
                     downloadFileExtension="mp3"
@@ -156,6 +153,10 @@ const ChatInput = ({state, setState, handleSubmitChat}) => {
                                 ? 
                                 (
                                     <InputAdornment position="end">
+                                        <input onChange={handleCapture} ref={inputRef} type="file" accept="image/*" multiple style={{display: 'none'}} />
+                                        <IconButton onClick={() => {inputRef.current.click()}}>
+                                            <AddPhotoAlternateIcon />
+                                        </IconButton>
                                         <IconButton onClick={() => handleSubmitChat()}>
                                             <SendIcon />
                                         </IconButton>

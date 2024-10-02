@@ -11,8 +11,9 @@ const MessagePanel = ({ chatHistory, width, height }) => {
             width: '100%',
             flexDirection: 'column', 
             overflow: "hidden", 
-            py: 2,
+            py: 1,
             position: 'relative',
+            // backgroundColor: '#eeeeee'
             }} 
         >
             {/* Background */}
@@ -24,13 +25,15 @@ const MessagePanel = ({ chatHistory, width, height }) => {
                     position: "absolute",
                     width: "100%",
                     height: '100%',
-                    zIndex: -2
+                    zIndex: 2,
+                    backgroundColor: '#eee',
+                    opacity: "0.25"
                 }}
             >
-                <InvertedLogo width="40%" height="40%" opacity="0.045" />
+                <InvertedLogo width="40%" height="40%" opacity="0.3" />
             </Box>
             {/* Chats */}
-            <Box sx={{width: '100%', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column-reverse', overflowX: 'hidden'}}>
+            <Box sx={{zIndex: 3,width: '100%', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column-reverse', overflowX: 'hidden'}}>
                 {chatHistory?.map((message, index) => {
                     return <Message key={index} role={message.role} messages={message.parts} width={width} height={height} /> 
                 })}
