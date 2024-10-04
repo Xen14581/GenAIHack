@@ -6,14 +6,16 @@ import CodeEditor from '../components/CodeEditor';
 import TestPanel from '../components/TestPanel';
 import { getCode, evaluateCode } from '../apis/code';
 import { useSelector } from 'react-redux';
+import { useDispatch } from "react-redux";
 
 const Code = () => {
     document.title = "Learn | Code"
 
     const [problem, setProblem] = useState({})
     const [tab, setTab] = useState(0)
-    const selectedTopic = useSelector(state => state.topic.selectedTopic)
+    let selectedTopic = useSelector(state => state.topic.selectedTopic)
     const user = useSelector(state => state.user.value)
+    const dispatch = useDispatch()
 
     const submitCode = async (code) => {
         const data = await evaluateCode(user.token, selectedTopic.id, code)
@@ -23,13 +25,6 @@ const Code = () => {
                 test_cases: data.results
             }
         })
-        if (data.results.every(obj => obj.pass === true)) {
-            let progress = await setTopicProgress(user.token, selectedTopic.id, "Complete")
-            if (progress.message === "OK") {
-                dispatch(updateTopic([selectedTopic.id, {'progress': 'Complete'}]))
-                selectedTopic = {...selectedTopic, ...{progress: 3}}
-            }
-        }
         let trigger = `Student Code:\n${code}\nTest Cases:\n\n${data.results.map(tcase => {
             return [
                 'Input:', 
@@ -37,7 +32,9 @@ const Code = () => {
                 'Student Code Output:', 
                 String(tcase.user_output), 
                 'Expected Output:', 
-                String(tcase.expected_output)
+                String(tcase.expected_output),
+                'Score:',
+                `${String(data.score)}%`
             ].join("\n")
         }).join("\n\n")}`
         localStorage.setItem("trigger", trigger)

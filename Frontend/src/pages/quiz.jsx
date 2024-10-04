@@ -51,7 +51,7 @@ const Quiz=()=>{
       left: 0,
       behavior: 'smooth'
     })
-    if (scoresjson.score >= 80) {
+    if (scoresjson.score >= 80 && selectedTopic.progress < 2) {
       let progress = await setTopicProgress(user.token, selectedTopic.id, "Code")
       if (progress.message === "Ok") {
           dispatch(updateTopic([selectedTopic.id, {'progress': 'Code'}]))

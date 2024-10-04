@@ -28,12 +28,9 @@ export const topicSlice = createSlice({
       let [topic_id, progress] = action.payload
       state.topics = state.topics.map(topic => {
         if (topic.id !== topic_id) {
-          console.log("Here")
           return topic
         } else {
-          console.log("Tere")
           progress.progress = progress_json[progress.progress]
-          console.log(progress.progress)
           return {...topic, ...progress}
         }
       })

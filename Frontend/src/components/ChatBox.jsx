@@ -7,6 +7,7 @@ import {getChatHistory, chat, stream} from "../apis/chat";
 import ChatInput from "./ChatInput";
 import { useDispatch } from "react-redux";
 import { setTopicProgress } from "../apis/progress";
+import { updateTopic } from "../reducers/topicSlice";
 
 function containsQuizForModel(data) {
     return data.some(item => {
@@ -18,7 +19,7 @@ function containsQuizForModel(data) {
   }
 
 const ChatBox=({width, height})=>{
-    const selectedTopic = useSelector(state => state.topic.selectedTopic)
+    let selectedTopic = useSelector(state => state.topic.selectedTopic)
     const user = useSelector(state => state.user.value)
     // const currentActiveStep = useSelector(state => state.step.activeStep)
     const dispatch = useDispatch()
@@ -239,7 +240,7 @@ const ChatBox=({width, height})=>{
             let activeStep = containsQuizForModel(data) ? 1 : 0
             if (activeStep > selectedTopic.progress) {
                 let progress = await setTopicProgress(user.token, selectedTopic.id, "Quiz")
-                if (progress.message === "OK") {
+                if (progress.message === "Ok") {
                     dispatch(updateTopic([selectedTopic.id, {'progress': 1}]))
                     selectedTopic = {...selectedTopic, ...{progress: 1}}
                 }
@@ -268,6 +269,14 @@ const ChatBox=({width, height})=>{
             let trigger = localStorage.getItem('trigger')
             if (trigger) {
                 await handleSubmit(trigger)
+                let score = parseFloat(trigger.split("\n").slice(-1)[0].replace("%", ""))
+                if (score >= 80) {
+                    let progress = await setTopicProgress(user.token, selectedTopic.id, "Complete")
+                    if (progress.message === "Ok") {
+                        dispatch(updateTopic([selectedTopic.id, {'progress': 'Complete'}]))
+                        selectedTopic = {...selectedTopic, ...{progress: 3}}
+                    }
+                }
                 localStorage.removeItem('trigger')
             }
         }

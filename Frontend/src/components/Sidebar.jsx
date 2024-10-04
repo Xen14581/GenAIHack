@@ -64,7 +64,7 @@ const SideBar=()=>{
                                         onClick={()=>handleSelectTopic(topic)}
                                         secondaryAction={
                                             <Box sx={{display: 'flex', alignItems: 'center'}}>
-                                                <CheckCircleIcon fontSize="small" color="success" sx={{opacity: topic.progress >= 4 ? 1 : 0}} />
+                                                <CheckCircleIcon fontSize="small" color="success" sx={{opacity: topic.progress >= 3 ? 1 : 0}} />
                                             </Box>
                                         }
                                         >
